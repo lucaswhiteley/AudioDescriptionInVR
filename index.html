@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>First three.js app</title>
+    <title>TEST First three.js app</title>
     <style>
         body {
             margin: 0;
@@ -22,7 +22,7 @@
         document.body.appendChild(renderer.domElement);
 
         //Creating the plane
-        const geometry = new THREE.PlaneGeometry( 1, 1 );
+        const geometry = new THREE.PlaneGeometry(2000, 2000, 8, 8);
         const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
         const plane = new THREE.Mesh( geometry, material );
         scene.add( plane );
@@ -37,7 +37,7 @@
         camera.position.z = 5;
 
          function animate() {
-        //     requestAnimationFrame(animate);
+             requestAnimationFrame(animate);
         //     cube.rotation.x += 0.01;
         //     cube.rotation.y += 0.01;
              renderer.render(scene, camera);
