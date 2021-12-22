@@ -24,6 +24,10 @@
 
         function animate()
         {
+            requestAnimationFrame ( animate );
+	        //mesh.rotation.x += 0.01;
+	        //mesh.rotation.y += 0.01;
+
             //Renders the scene
             renderer.render(scene, camera);
         }
@@ -44,12 +48,12 @@
         	scene.add(camera);
 
             //Creates a test cube
-            const cubeGeometry = new THREE.boxGeometry(200,200,200)
-            const cubeMaterial = new THREE.MeshBasicMaterial({color: red});
+            const cubeGeometry = new THREE.BoxGeometry(200,200,200)
+            const cubeMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff});
 
             //Adding the Cube to the scene
-            testCube = new THREE.Mesh(cubeGeometry, cubeMaterial)
-            scene.add(testCube)
+            mesh = new THREE.Mesh(cubeGeometry, cubeMaterial)
+            scene.add(mesh)
 
 
             var gloorGeometry = new THREE.PlaneGeometry( 1000, 1000, 1, 1 );
@@ -57,7 +61,7 @@
 	        var floor = new THREE.Mesh( gloorGeometry, floorMaterial );
             //This line renders both sides of the plane
         	floor.material.side = THREE.DoubleSide;
-	        floor.rotation.x = 90;
+	        //floor.rotation.x = 90;
 	        scene.add(floor); 
         }
     </script>
