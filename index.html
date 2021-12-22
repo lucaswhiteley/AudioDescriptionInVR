@@ -17,11 +17,13 @@
         var renderer;
         var scene;
         var camera;
-        var mesh;
+        var testCube;
 
         itit();
+        populate();
         animate();
 
+        //defines the animation of the scene and calls the renderer.
         function animate()
         {
             requestAnimationFrame ( animate );
@@ -32,6 +34,7 @@
             renderer.render(scene, camera);
         }
 
+        //Initialises the scene and other essential things before the program runs
         function itit()
         {
             //ititialises the renderer and sets it to the size of the window
@@ -47,22 +50,47 @@
 	        camera.position.set(0, 0, 1000);
         	scene.add(camera);
 
-            //Creates a test cube
-            const cubeGeometry = new THREE.BoxGeometry(200,200,200)
-            const cubeMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff});
-
-            //Adding the Cube to the scene
-            mesh = new THREE.Mesh(cubeGeometry, cubeMaterial)
-            scene.add(mesh)
 
 
             var gloorGeometry = new THREE.PlaneGeometry( 1000, 1000, 1, 1 );
-	        var floorMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+	        var floorMaterial = new THREE.MeshBasicMaterial( { color: 0x00ffff } );
 	        var floor = new THREE.Mesh( gloorGeometry, floorMaterial );
             //This line renders both sides of the plane
         	floor.material.side = THREE.DoubleSide;
 	        //floor.rotation.x = 90;
 	        scene.add(floor); 
+        }
+
+        //populates the scene with all of the objects
+        function populate()
+        {
+            //Create a select case statement for material, and geometry
+/*             //Creates a test cube
+            const geometry = new THREE.BoxGeometry(200,200,200)
+            const material = new THREE.MeshBasicMaterial({color: 0xff00ff});
+
+            //Create a loop to create a random number of cubes, spheres and cones
+            var num = 5;
+            var randX = 100;
+            var randY = 100;
+            for (let i = 0; i < num; i ++)
+            {
+                mesh = new THREE.Mesh(geometry, material)
+                mesh.position.x = randX + (i * 23);
+                mesh.position.y = randY  + (i * 23);
+                scene.add(mesh);
+            } */
+            
+            
+
+            //Creates a test cube
+            const cubeGeometry = new THREE.BoxGeometry(200,200,200)
+            const cubeMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff});
+
+            //Adding the Cube to the scene
+            testCube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+            scene.add(testCube)
+
         }
     </script>
 </body>
