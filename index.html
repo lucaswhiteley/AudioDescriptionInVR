@@ -21,11 +21,16 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        //Creating the plane
-        const geometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
-        const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-        const plane = new THREE.Mesh( geometry, material );
-        scene.add( plane );
+        //Creating the plane to act as the floor
+        const floorGeometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
+        floorGeometry.rotateX(-Math.PI / 2 );
+
+        const floorMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+        const floor = new THREE.Mesh( geometry, material );
+
+        scene.add( floor );
+
+        //Adding a cube to the plane
 
         // //A cube for testing
         // const geometry = new THREE.BoxGeometry();
