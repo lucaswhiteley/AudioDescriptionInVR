@@ -63,11 +63,10 @@
         //populates the scene with all of the objects
         function populate()
         {
-            //Arrays to store the positions of the objects
-            let objectsX = [];
-            let objectsY = [];
-            let objectsArray = [];
-
+                //Arrays to store the positions of the objects
+                let objectsX = [];
+                let objectsY = [];
+        
             //Create a loop to create a random number of cubes, spheres and cones
 
             var numToGen = Math.floor(Math.random()*4) + 3;
@@ -117,24 +116,20 @@
 
 
                 mesh = new THREE.Mesh(geometry, material)
-                objectsArray[i] = mesh;
-
-
                 //since 0 is the middle of the plane, the position could be negative too
                 mesh.position.x = Math.floor(Math.random()*800) -400;
 
                 //loops through the x array to see if there are any overlaps
-                for (let j = 0; j< objectsArray.length; j++)
+                for (let j = 0; j< objectsX.length; j++)
                 {
-                    console.log("AHHH");
+                    console.log(objectsX.length);
 
-                    if( objectsArray[j].position.x -400 <= mesh.position.x <=  objectsArray[j].position.x -400)
+                    if( objectsX[j] -400 <= mesh.position.x <= objectsX[j] + 400)
                     {
                         mesh.position.x = mesh.position.x + 400;
-                        console.log("X OVERLAP, ORIG:" +  objectsArray[j].x + "NEW: " + mesh.position.x) 
-                        console.log("FDFDFD");
+                        console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)  
                     }
-                    console.log("ADASD");
+
                     //console.log("3");
 
                 }
@@ -161,8 +156,8 @@
                 //adds the y position of the object to the Array
                 objectsY[i] = mesh.position.y;
 
-                console.log(objectsArray)
-
+                console.log(objectsX)
+                console.log(objectsY)
 
 
                 scene.add(mesh);
