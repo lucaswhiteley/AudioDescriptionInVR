@@ -63,10 +63,10 @@
         //populates the scene with all of the objects
         function populate()
         {
-
-            //Create a select case statement for material, and geometry
-
-
+                //Arrays to store the positions of the objects
+                let objectsX = [];
+                let objectsY = [];
+        
             //Create a loop to create a random number of cubes, spheres and cones
 
             var numToGen = Math.floor(Math.random()*4) + 3;
@@ -113,23 +113,56 @@
                         break;
                 }
 
+
+
                 mesh = new THREE.Mesh(geometry, material)
                 //since 0 is the middle of the plane, the position could be negative too
                 mesh.position.x = Math.floor(Math.random()*800) -400;
+
+                //loops through the x array to see if there are any overlaps
+                for (let j = 0; j< objectsX.length; j++)
+                {
+                    console.log(objectsX.length);
+
+                    if( objectsX[j] -400 <= mesh.position.x <= objectsX[j] + 400)
+                    {
+                        mesh.position.x = mesh.position.x + 400;
+                        console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)  
+                    }
+
+                    //console.log("3");
+
+                }
+
+                //adds the x position of the object to the Array
+                objectsX[i] = mesh.position.x;
                 mesh.position.y = Math.floor(Math.random()*800) -400;
+
+                //loops through the Y array to see if there are any overlaps
+                for (let k = 0; k< objectsY.length; k++)
+                {
+                    console.log(objectsY.length);
+
+                    if( objectsY[k] -400 <= mesh.position.y <= objectsY[k] + 400)
+                    {
+                        mesh.position.y = mesh.position.y + 400;
+                        console.log("Y OVERLAP, ORIG:" + objectsY[k] + "NEW: " + mesh.position.y)  
+                    }
+
+                    //console.log("3");
+
+                }
+
+                //adds the y position of the object to the Array
+                objectsY[i] = mesh.position.y;
+
+                console.log(objectsX)
+                console.log(objectsY)
+
+
                 scene.add(mesh);
             } 
             
-            
-
-            //Creates a test cube
-            //const cubeGeometry = new THREE.BoxGeometry(200,200,200)
-            //const cubeMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff});
-
-            //Adding the Cube to the scene
-            //testCube = new THREE.Mesh(cubeGeometry, cubeMaterial)
-            //scene.add(testCube)
-
         }
     </script>
 </body>
