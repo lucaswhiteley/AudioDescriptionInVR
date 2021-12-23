@@ -69,14 +69,31 @@
 
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random()*5) + 2;
+            var numToGen = Math.floor(Math.random()*4) + 3;
             //generates between 2 and 5 cubes
             for (let i = 0; i < numToGen; i ++)
             {
 
-                ///Creates a test cube
-                geometry = new THREE.BoxGeometry(200,200,200)
-            
+
+                ///Choosing the shape of the object
+                let z = Math.floor(Math.random()*3) + 1;
+                switch(z)
+                {
+                    case 1:
+                        //Box
+                        geometry = new THREE.BoxGeometry(200,200,200)
+                        break;
+                    case 2:
+                        //Sphere
+                        geometry = new THREE.SphereGeometry(120)
+                        break;
+                    case 3:
+                        //Cone
+                        geometry = new THREE.ConeGeometry(100,200)
+                        break;
+                }
+
+
 
                 //choosing the colour of the object
                 let x = Math.floor(Math.random()*3) + 1;
@@ -95,9 +112,6 @@
                         material = new THREE.MeshBasicMaterial({color: 0xff00e1});
                         break;
                 }
-                //material = new THREE.MeshBasicMaterial({color: newColour});
-
-
 
                 mesh = new THREE.Mesh(geometry, material)
                 //since 0 is the middle of the plane, the position could be negative too
