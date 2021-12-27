@@ -13,6 +13,7 @@
 
 <body>
     <script src="js/three.js"></script>
+    <script type="module" src="js/FirstPersonControls.js"></script>
     <script>
         var renderer;
         var scene;
@@ -41,6 +42,10 @@
             renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement)
+
+            console.log("window.innerWidth = " + window.innerWidth);
+            console.log("window.innerHeight = " + window.innerHeight);
+
 
             //Initialises the scene
             scene = new THREE.Scene();
@@ -117,7 +122,7 @@
 
                 mesh = new THREE.Mesh(geometry, material)
                 //since 0 is the middle of the plane, the position could be negative too
-                mesh.position.x = Math.floor(Math.random()*800) -400;
+                mesh.position.x = Math.floor(Math.random()*1850) -900;
 
                 //loops through the x array to see if there are any overlaps
                 for (let j = 0; j< objectsX.length; j++)
@@ -129,14 +134,11 @@
                         mesh.position.x = Math.floor(Math.random()*800) -400;
                         console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)  
                     }
-
-                    //console.log("3");
-
                 }
 
                 //adds the x position of the object to the Array
                 objectsX[i] = mesh.position.x;
-                mesh.position.y = Math.floor(Math.random()*800) -400;
+                mesh.position.y = Math.floor(Math.random()*810) -405;
 
                 //loops through the Y array to see if there are any overlaps
                 for (let k = 0; k< objectsY.length; k++)
@@ -148,8 +150,6 @@
                         mesh.position.y = Math.floor(Math.random()*800) -400;
                         console.log("Y OVERLAP, ORIG:" + objectsY[k] + "NEW: " + mesh.position.y)  
                     }
-
-                    //console.log("3");
 
                 }
 
