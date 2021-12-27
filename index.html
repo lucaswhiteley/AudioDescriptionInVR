@@ -47,7 +47,7 @@
 
             //Initialises the camera
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
-	        camera.position.set(0, 0, 1000);
+	        camera.position.set(0, 0, 2000);
         	scene.add(camera);
 
 
@@ -69,7 +69,7 @@
         
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random()*4) + 3;
+            var numToGen = Math.floor(Math.random()*6) + 3;
             //generates between 2 and 5 cubes
             for (let i = 0; i < numToGen; i ++)
             {
@@ -81,15 +81,15 @@
                 {
                     case 1:
                         //Box
-                        geometry = new THREE.BoxGeometry(200,200,200)
+                        geometry = new THREE.BoxGeometry(100,100,100)
                         break;
                     case 2:
                         //Sphere
-                        geometry = new THREE.SphereGeometry(120)
+                        geometry = new THREE.SphereGeometry(60)
                         break;
                     case 3:
                         //Cone
-                        geometry = new THREE.ConeGeometry(100,200)
+                        geometry = new THREE.ConeGeometry(50,100)
                         break;
                 }
 
@@ -124,9 +124,9 @@
                 {
                     console.log(objectsX.length);
 
-                    if( objectsX[j] -400 <= mesh.position.x <= objectsX[j] + 400)
+                    if( objectsX[j] -200 <= mesh.position.x <= objectsX[j] + 200)
                     {
-                        mesh.position.x = mesh.position.x + 400;
+                        mesh.position.x = Math.floor(Math.random()*800) -400;
                         console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)  
                     }
 
@@ -143,9 +143,9 @@
                 {
                     console.log(objectsY.length);
 
-                    if( objectsY[k] -400 <= mesh.position.y <= objectsY[k] + 400)
+                    if( objectsY[k] -200 <= mesh.position.y <= objectsY[k] + 200)
                     {
-                        mesh.position.y = mesh.position.y + 400;
+                        mesh.position.y = Math.floor(Math.random()*800) -400;
                         console.log("Y OVERLAP, ORIG:" + objectsY[k] + "NEW: " + mesh.position.y)  
                     }
 
