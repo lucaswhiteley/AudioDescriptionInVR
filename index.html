@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TEST 5 First three.js app</title>
+    <title>TEST 8 First three.js app</title>
     <style>
         body {
             margin: 0;
@@ -15,34 +15,45 @@
     <!--First import the code for three.js and FirstPersonController from file-->
     <script src="js/three.js"></script>
     <script src="js/FirstPersonControls.js"></script>
-    
-    <!-- not working??? has to be run on a server?? -->
-    <!-- <script type="module" src="js/FirstPersonControls.js"></script> -->
 
     <script>
-        
+
         var renderer;
         var scene;
         var camera;
-        //var testCube;
+
         var clock = new THREE.Clock();
 
+        class ThreeDObject {
+                constructor(colour, shape, x, y, z) {
+                    this.colour = colour;
+                    this.shape = shape;
+                    this.x = x;
+                    this.y = y;
+                    this.z = z;
+                }
+            }
+        
+        //var red = "0xff1100";
+        //var green = "0x00ff59";
+        //var purple = "0xff00e1";
+
+        var threeDObjectArray = [];
+
+        //initialises the scene
         itit();
+        //populates the scene with objects
         populate();
+        //animates the scene (primarily camera movement)
         animate();
 
-
-
         //defines the animation of the scene and calls the renderer.
-        function animate()
-        {
+        function animate() {
             //IN PROGRESS
             var delta = clock.getDelta();
 
             fpcCamera.movementSpeed = 101
             fpcCamera.update(delta);
-
-
 
             requestAnimationFrame(animate);
             //Renders the scene
@@ -50,8 +61,9 @@
         }
 
         //Initialises the scene and other essential things before the program runs
-        function itit()
-        {
+        function itit() {
+
+
             //ititialises the renderer and sets it to the size of the window
             renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -66,130 +78,177 @@
 
             //Initialises the camera
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-	        camera.position.set(40, 40, 400);
-            camera.lookAt(scene.position);
-        	scene.add(camera);
-
-
+            camera.position.set(40, 40, 400);
+            camera.lookAt(100, 40, 400);
+            scene.add(camera);
 
             //IN PROGRESS
             fpcCamera = new THREE.FirstPersonControls(camera, document.body);
 
-
-            var gloorGeometry = new THREE.PlaneGeometry( window.innerWidth , window.innerHeight, 1, 1 );
-	        var floorMaterial = new THREE.MeshBasicMaterial( { color: 0x00ffff } );
-	        var floor = new THREE.Mesh( gloorGeometry, floorMaterial );
+            var gloorGeometry = new THREE.PlaneGeometry(window.innerWidth * 2, window.innerHeight * 2, 1, 1);
+            var floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+            var floor = new THREE.Mesh(gloorGeometry, floorMaterial);
             //This line renders both sides of the plane
-        	floor.material.side = THREE.DoubleSide;
-	        floor.rotation.x = (-Math.PI / 2) ;
+            floor.material.side = THREE.DoubleSide;
+            floor.rotation.x = (-Math.PI / 2);
             floor.position.y = 0;
             floor.position.x = 0;
             floor.position.z = 0;
 
+            scene.add(floor);
 
-	        scene.add(floor); 
         }
 
         //populates the scene with all of the objects
-        function populate()
-        {
-                //Arrays to store the positions of the objects
-                let objectsX = [];
-                let objectsY = [];
-        
+        function populate() {
+            //Arrays to store the positions of the objects
+            var objectsX = [];
+            var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random()*6) + 3;
+            var numToGen = Math.floor(Math.random() * 6) + 3;
+            //test
+            //var numToGen = 1;
+            
             //generates between 2 and 5 cubes
-            for (let i = 0; i < numToGen; i ++)
-            {
+            for (let i = 0; i < numToGen; i++) {
 
 
                 ///Choosing the shape of the object
-                let z = Math.floor(Math.random()*3) + 1;
-                switch(z)
-                {
+                let z = Math.floor(Math.random() * 3) + 1;
+                switch (z) {
                     case 1:
                         //Box
-                        geometry = new THREE.BoxGeometry(100,100,100)
+                        objectShape = "Box";
+                        geometry = new THREE.BoxGeometry(100, 100, 100)
                         break;
                     case 2:
                         //Sphere
+                        objectShape = "Sphere";
+
                         geometry = new THREE.SphereGeometry(60)
                         break;
                     case 3:
                         //Cone
-                        geometry = new THREE.ConeGeometry(50,100)
+                        objectShape = "Cone";
+
+                        geometry = new THREE.ConeGeometry(50, 100)
                         break;
                 }
 
 
 
                 //choosing the colour of the object
-                let x = Math.floor(Math.random()*3) + 1;
-                switch(x)
-                {
+                let x = Math.floor(Math.random() * 3) + 1;
+                switch (x) {
                     case 1:
                         //red
-                        material = new THREE.MeshBasicMaterial({color: 0xff1100});
+                        objectColour = "red";
+                        material = new THREE.MeshBasicMaterial({ color: 0xff1100 });
                         break;
                     case 2:
                         //Spring Green
-                        material = new THREE.MeshBasicMaterial({color: 0x00ff59});
+                        objectColour = "Spring Green";
+                        material = new THREE.MeshBasicMaterial({ color: 0x00ff59 });
                         break;
                     case 3:
                         //Purple Pizzazz
-                        material = new THREE.MeshBasicMaterial({color: 0xff00e1});
+                        objectColour = "Purple Pizzazz";
+                        material = new THREE.MeshBasicMaterial({ color: 0xff00e1 });
                         break;
                 }
 
 
-
                 mesh = new THREE.Mesh(geometry, material)
                 //since 0 is the middle of the plane, the position could be negative too
-                mesh.position.x = Math.floor(Math.random()*1850) -900;
+                mesh.position.x = Math.floor(Math.random() * 1850) - 900;
                 mesh.position.y = 50;
 
                 //loops through the x array to see if there are any overlaps
-                for (let j = 0; j< objectsX.length; j++)
-                {
-                    console.log(objectsX.length);
+                for (let j = 0; j < objectsX.length; j++) {
+                    console.log("objectsX.length: " + objectsX.length);
 
-                    if( objectsX[j] -200 <= mesh.position.x <= objectsX[j] + 200)
-                    {
-                        mesh.position.x = Math.floor(Math.random()*800) -400;
-                        console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)  
+                    if (objectsX[j] - 200 <= mesh.position.x <= objectsX[j] + 200) {
+                        mesh.position.x = Math.floor(Math.random() * 800) - 400;
+                        //console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)
                     }
                 }
 
                 //adds the x position of the object to the Array
                 objectsX[i] = mesh.position.x;
-                mesh.position.z = Math.floor(Math.random()*810) -405;
+                mesh.position.z = Math.floor(Math.random() * 810) - 405;
 
                 //loops through the Y array to see if there are any overlaps
-                for (let k = 0; k< objectsY.length; k++)
-                {
-                    console.log(objectsY.length);
+                for (let k = 0; k < objectsZ.length; k++) {
+                    console.log(objectsZ.length);
 
-                    if( objectsY[k] -200 <= mesh.position.z <= objectsY[k] + 200)
-                    {
-                        mesh.position.z = Math.floor(Math.random()*800) -400;
-                        console.log("Y OVERLAP, ORIG:" + objectsY[k] + "NEW: " + mesh.position.y)  
+                    if (objectsZ[k] - 200 <= mesh.position.z <= objectsZ[k] + 200) {
+                        mesh.position.z = Math.floor(Math.random() * 800) - 400;
+                        //console.log("Z OVERLAP, ORIG:" + objectsZ[k] + "NEW: " + mesh.position.z)
                     }
 
                 }
 
                 //adds the y position of the object to the Array
-                objectsY[i] = mesh.position.z;
+                objectsZ[i] = mesh.position.z;
 
                 //debug
                 console.log(objectsX)
-                console.log(objectsY)
+                console.log(objectsZ)
+
+                //creating the object and adding to the array
+                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.z, mesh.position.y, mesh.position.z);
+                threeDObjectArray[i] = newObject;
+                console.log(threeDObjectArray[i]);
+                console.log(threeDObjectArray.length);
 
 
                 scene.add(mesh);
-            } 
+            }
+
+        }
+
+        //Working on getting the location of the camera with a button press
+        window.addEventListener("keydown", onKeyDown, false);
+
+        function onKeyDown(e) {
+            if (e.keyCode == "32") {
+                console.log("X Position = " + fpcCamera.object.position.x)
+                console.log("Y Position = " + fpcCamera.object.position.y)
+                console.log("Z Position = " + fpcCamera.object.position.z)
+                theDistances = workOutDistance();
+                console.log("Distances = " + theDistances)
+                //console.log("World Direction" + fpcCamera._lookDirection );
+            }
+
+        }
+
+        function workOutDistance(){
+            let distances = [];
+            for (let a = 0; a < threeDObjectArray.length; a++){
+                distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
+                //distances[a] = distanceWithoutY(threeDObjectArray[a].x,threeDObjectArray[a].z);
+
+            }
+
+            return distances;
             
+        }
+
+         //calculates the distance between an object and the camera using the X,and Z coordinates as Y is the same between each
+
+        function distanceWithoutY(x,z)
+        {
+            let distanceToCamera = Math.sqrt(Math.pow((x - fpcCamera.object.position.x ),2)+ Math.pow((z - fpcCamera.object.position.z),2));
+            return distanceToCamera;
+
+        }
+
+        //calculates the distance between an object and the camera using the X,Y, AND Z coordinates
+        function distance(x,y, z) {
+            //finds the distance between an object and the camera using Pythagoras theorem
+            let distanceToCamera = Math.sqrt(Math.pow((fpcCamera.object.position.x - x),2)+ Math.pow((fpcCamera.object.position.y -y),2) + Math.pow((fpcCamera.object.position.z - z),2));
+            return distanceToCamera;
         }
     </script>
 </body>

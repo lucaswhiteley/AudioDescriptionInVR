@@ -22,17 +22,17 @@
 
 			this.enabled = true;
 			this.movementSpeed = 1.0;
-			this.lookSpeed = 0.005;
-			this.lookVertical = true;
+			this.lookSpeed = 0.05;
+			this.lookVertical = false;
 			this.autoForward = false;
 			this.activeLook = true;
 			this.heightSpeed = false;
 			this.heightCoef = 1.0;
 			this.heightMin = 0.0;
 			this.heightMax = 1.0;
-			this.constrainVertical = false;
-			this.verticalMin = 0;
-			this.verticalMax = Math.PI;
+			this.constrainVertical = true;
+			this.verticalMin = (-Math.PI / 2);
+			this.verticalMax = (-Math.PI / 2);
 			this.mouseDragOn = false; // internals
 
 			this.autoSpeedFactor = 0.0;
@@ -154,13 +154,13 @@
 						this.moveRight = true;
 						break;
 
-					case 'KeyR':
-						this.moveUp = true;
-						break;
+					// case 'KeyR':
+					// 	this.moveUp = true;
+					// 	break;
 
-					case 'KeyF':
-						this.moveDown = true;
-						break;
+					// case 'KeyF':
+					// 	this.moveDown = true;
+					// 	break;
 
 				}
 
@@ -190,13 +190,13 @@
 						this.moveRight = false;
 						break;
 
-					case 'KeyR':
-						this.moveUp = false;
-						break;
+					// case 'KeyR':
+					// 	this.moveUp = false;
+					// 	break;
 
-					case 'KeyF':
-						this.moveDown = false;
-						break;
+					// case 'KeyF':
+					// 	this.moveDown = false;
+					// 	break;
 
 				}
 
