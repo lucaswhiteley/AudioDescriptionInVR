@@ -27,16 +27,19 @@
         var cameraY;
         var cameraZ;
 
+        var adScript = [];
 
         var clock = new THREE.Clock();
 
         class ThreeDObject {
-                constructor(colour, shape, x, y, z) {
+                constructor(colour, shape, x, y, z, distance) {
                     this.colour = colour;
                     this.shape = shape;
                     this.x = x;
                     this.y = y;
                     this.z = z;
+                    this.theDistance = -1;
+                    //this.angle = -1;
                 }
             }
         
@@ -115,7 +118,7 @@
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random() * 6) + 3;
+            var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
             //var numToGen = 1;
             
@@ -231,15 +234,21 @@
                 console.log("Object 1 Y Position = " + threeDObjectArray[0].y)
                 console.log("Object 1 Z Position = " + threeDObjectArray[0].z)
 
-                //console.log("Object 2 X Position = " + threeDObjectArray[1].x)
-                //console.log("Object 2 Y Position = " + threeDObjectArray[1].y)
-                //console.log("Object 2 Z Position = " + threeDObjectArray[1].z)
+                //console.log("mouseX = " + fpcCamera._lookDirection)
+
 
                 theDistances = workOutDistance();
                 console.log("Distances = " + theDistances)
                 objectArrayToString();
                 
-                //console.log("World Direction" + fpcCamera._lookDirection );
+                console.log(threeDObjectArray[0])
+                console.log("Object 1 Distance = " + threeDObjectArray[0].theDistance)
+                
+                //CALLS for the creation of the Audio Description
+                createAD()
+                console.log(adScript)
+
+                //console.log("Looking Direction") // + direction );
             }
 
         }
@@ -258,12 +267,11 @@
             for (let a = 0; a < threeDObjectArray.length; a++){
                 //distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
                 distances[a] = distanceWithoutY(threeDObjectArray[a].x,threeDObjectArray[a].z);
-
+                threeDObjectArray[a].theDistance = distances[a];
             }
 
             return distances;
-            
-        }
+       }
 
          //calculates the distance between an object and the camera using the X,and Z coordinates as Y is the same between each
 
@@ -279,6 +287,67 @@
             //finds the distance between an object and the camera using Pythagoras theorem
             let distanceToCamera = Math.sqrt(Math.pow((camera.position.x - x),2)+ Math.pow((camera.position.y -y),2) + Math.pow((camera.position.z - z),2));
             return distanceToCamera;
+        }
+
+        //function to work out the direction the camera is facing
+        //currently does not work
+        function getCameraDirection()
+        {
+            camera.lookAt( point );
+            var vector = new THREE.Vector3( 0, 0, - 1 );
+            vector.applyQuaternion( camera.quaternion );
+            //camera.getWorldDirection( dirVector );
+            return vector
+        }
+
+        //Creates the array of Audio Desctiption
+        function createAD()
+        {
+                        
+            //loops through the array and creates a line for each part.
+            for (let b = 0; b < threeDObjectArray.length; b++)
+            {
+                if(threeDObjectArray[b].theDistance < 200){
+                    adScript[b] ="Very close up there is a ";
+                }else if(threeDObjectArray[b].theDistance < 600){
+                    adScript[b] ="At a medium distance there is a ";
+
+                }else if(threeDObjectArray[b].theDistance < 950){
+                    adScript[b] ="In the far distance, you can see a ";
+                }
+
+                //Loops through and adds the Colour
+                switch(threeDObjectArray[b].colour)
+                {
+                    case "red":
+                    adScript[b] += "red"
+                        break;
+                    case "Spring Green":
+                    adScript[b] += "green"
+                        break;
+                    case "Purple Pizzazz":
+                    adScript[b] += "purple" 
+                        break;
+                }
+            
+
+                //Loops through and adds the shape
+                switch(threeDObjectArray[b].shape)
+                {
+                    case "Box":
+                    adScript[b] += " Box."
+
+                        break;
+                    case "Sphere":
+                    adScript[b] += " Sphere."
+                        break;
+                    case "Cone":
+                    adScript[b] += " Cone."
+                        break;
+                }
+            }
+
+            return adScript
         }
     </script>
 </body>
