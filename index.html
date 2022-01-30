@@ -35,13 +35,15 @@
         var clock = new THREE.Clock();
 
         class ThreeDObject {
-            constructor(colour, shape, x, y, z, distance) {
+            constructor(colour, shape, x, y, z, distance, angle) {
                 this.colour = colour;
                 this.shape = shape;
                 this.x = x;
                 this.y = y;
                 this.z = z;
                 this.theDistance = -1;
+                this.theAngle = -1;
+
                 //this.angle = -1;
             }
         }
@@ -140,7 +142,6 @@
                     case 2:
                         //Sphere
                         objectShape = "Sphere";
-
                         geometry = new THREE.SphereGeometry(60)
                         break;
                     case 3:
@@ -259,6 +260,10 @@
                 console.log("Distances = " + theDistances)
                 objectArrayToString();
 
+                theAngles = workOutAngles();
+                console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
+
+
                 //console.log(threeDObjectArray[0])
                 //console.log("Object 1 Distance = " + threeDObjectArray[0].theDistance)
 
@@ -270,11 +275,11 @@
                 adMessage = "";
                 adScriptToMessage()
                 console.log("Message: " + adMessage)
+
+                //reads the messasge outloud
                 readAD()
 
-                //console.log("Camera Quaternian " + camera.quaternion)
 
-                //console.log("Looking Direction") // + direction );
             }
 
         }
@@ -287,6 +292,7 @@
             }
         }
 
+        //creates an array of the distances of objects to the camera
         function workOutDistance() {
             let distances = [];
             for (let a = 0; a < threeDObjectArray.length; a++) {
@@ -306,6 +312,8 @@
 
         }
 
+
+
         //calculates the distance between an object and the camera using the X,Y, AND Z coordinates
         function distance(x, y, z) {
             //finds the distance between an object and the camera using Pythagoras theorem
@@ -313,16 +321,34 @@
             return distanceToCamera;
         }
 
+
+        //NOT COMPLETE
+
+        //creates an array of the angles of objects to the camera
+        function workOutAngles() {
+            let angles = [];
+            for (let a = 0; a < threeDObjectArray.length; a++) {
+                angles[a] = getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z);
+                threeDObjectArray[a].theAngle = angles[a];
+            }
+            return angles;
+        }
+
+        //works out the angle of an object and the camera
+        //does not take into account the rotation of the camera!!!
+        function getAngle(x, z) {
+            //formula for angle between = atan2
+            angleToCamera = Math.atan2(camera.position.x - x, camera.position.z - z);
+            return angleToCamera
+        }
+
+        //
+
         //function to work out the direction the camera is facing
         //currently does not work
         function getCameraDirection() {
-            //camera.lookAt( point );
-            //var vector = new THREE.Vector3( 0, 0, - 1 );
-            //vector.applyQuaternion( camera.quaternion );
-            //camera.getWorldDirection( dirVector );
 
             vector = camera.quaternion
-
             return vector
         }
 
@@ -333,18 +359,45 @@
             return deg
         }
 
+        //generates a random integer
+        function randomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
         //Creates the array of Audio Desctiption
         function createAD() {
 
             //loops through the array and creates a line for each part.
             for (let b = 0; b < threeDObjectArray.length; b++) {
                 if (threeDObjectArray[b].theDistance < 200) {
-                    adScript[b] = "Very close up there is a ";
+                    a = randomInt(3);
+                    if (a == 1) {
+                        adScript[b] = "Very close up there is a ";
+                    } else if (a == 2) {
+                        adScript[b] = "Within reach there is a ";
+                    } else if (a == 3) {
+                        adScript[b] = "Directly in front of you there is a ";
+                    }
+
                 } else if (threeDObjectArray[b].theDistance < 600) {
-                    adScript[b] = "At a medium distance there is a ";
+                    c = randomInt(2);
+                    if (c == 1) {
+                        adScript[b] = "At a medium distance there is a ";
+                    } else if (c == 2) {
+                        adScript[b] = "Not too far away there is a ";
+
+                    }
 
                 } else if (threeDObjectArray[b].theDistance < 950) {
                     adScript[b] = "In the far distance, you can see a ";
+                } else {
+                    e = randomInt(2);
+                    if (e == 1) {
+                        adScript[b] = "In the distance, You can faintly see a ";
+                    } else if (e == 2) {
+                        adScript[b] = "Beyond the horizon there is a ";
+
+                    }
                 }
 
                 //Loops through and adds the Colour
@@ -365,7 +418,6 @@
                 switch (threeDObjectArray[b].shape) {
                     case "Box":
                         adScript[b] += " Box."
-
                         break;
                     case "Sphere":
                         adScript[b] += " Sphere."
@@ -388,10 +440,10 @@
         }
 
         //reads out the Audio Description
-        function readAD(){
+        function readAD() {
             let utterance = new SpeechSynthesisUtterance();
-	        utterance.text = adMessage;
-	        window.speechSynthesis.speak(utterance);
+            utterance.text = adMessage;
+            window.speechSynthesis.speak(utterance);
         }
     </script>
 </body>
