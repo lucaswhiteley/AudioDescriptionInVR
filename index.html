@@ -367,6 +367,9 @@
         //Creates the array of Audio Desctiption
         function createAD() {
 
+            //Clears the previous AD
+            adScript.length = 0;
+
             //loops through the array and creates a line for each part.
             for (let b = 0; b < threeDObjectArray.length; b++) {
                 if (threeDObjectArray[b].theDistance < 200) {
@@ -388,8 +391,8 @@
 
                     }
 
-                } else if (threeDObjectArray[b].theDistance < 950) {
-                    adScript[b] = "In the far distance, you can see a ";
+                //} else if (threeDObjectArray[b].theDistance < 950) {
+                    //adScript[b] = "In the far distance, you can see a ";
                 } else {
                     e = randomInt(2);
                     if (e == 1) {
