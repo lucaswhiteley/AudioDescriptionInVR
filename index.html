@@ -209,14 +209,15 @@
                 objectsZ[i] = mesh.position.z;
 
                 //debug
-                console.log(objectsX)
-                console.log(objectsZ)
+                console.log("ObjectsX: " + objectsX)
+                console.log("ObjectsZ: " + objectsZ)
 
                 //creating the object and adding to the array
                 let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z);
                 threeDObjectArray[i] = newObject;
                 console.log(threeDObjectArray[i]);
                 console.log(threeDObjectArray.length);
+
 
 
                 scene.add(mesh);
@@ -279,6 +280,19 @@
                 //reads the messasge outloud
                 readAD()
 
+                //Debug information for the "undefined" bug
+                for (let c = 0; c < adScript.length; c++) {
+                    if (adScript[c].includes(undefined)) {
+                        console.log("Undefined Name: " + adScript[c]);
+                        console.log("Undefined Shape?: " + threeDObjectArray[c].shape);
+                        console.log("Undefined Colour?: " + threeDObjectArray[c].color);
+                        console.log("Undefined x?: " + threeDObjectArray[c].x);
+                        console.log("Undefined y?: " + threeDObjectArray[c].y);
+                        console.log("Undefined z?: " + threeDObjectArray[c].z);
+                        console.log("Undefined Angle?: " + threeDObjectArray[c].theAngle);
+                        console.log("Undefined Distance?: " + threeDObjectArray[c].theDistance);
+                    }
+                }
 
             }
 
@@ -361,7 +375,7 @@
 
         //generates a random integer
         function randomInt(max) {
-            return Math.floor(Math.random() * max);
+            return Math.floor(Math.random() * max + 1);
         }
 
         //Creates the array of Audio Desctiption
@@ -372,7 +386,7 @@
 
             //loops through the array and creates a line for each part.
             for (let b = 0; b < threeDObjectArray.length; b++) {
-                if (threeDObjectArray[b].theDistance < 200) {
+                if (threeDObjectArray[b].theDistance <= 200) {
                     a = randomInt(3);
                     if (a == 1) {
                         adScript[b] = "Very close up there is a ";
@@ -382,16 +396,15 @@
                         adScript[b] = "Directly in front of you there is a ";
                     }
 
-                } else if (threeDObjectArray[b].theDistance < 600) {
+                } else if (threeDObjectArray[b].theDistance <= 600) {
                     c = randomInt(2);
                     if (c == 1) {
                         adScript[b] = "At a medium distance there is a ";
                     } else if (c == 2) {
                         adScript[b] = "Not too far away there is a ";
-
                     }
 
-                //} else if (threeDObjectArray[b].theDistance < 950) {
+                    //} else if (threeDObjectArray[b].theDistance < 950) {
                     //adScript[b] = "In the far distance, you can see a ";
                 } else {
                     e = randomInt(2);
@@ -414,6 +427,9 @@
                     case "Purple Pizzazz":
                         adScript[b] += "purple"
                         break;
+                    default:
+                        adScript[b] += ""
+                        break;
                 }
 
 
@@ -427,6 +443,9 @@
                         break;
                     case "Cone":
                         adScript[b] += " Cone."
+                        break;
+                    default:
+                        adScript[b] += ""
                         break;
                 }
             }
