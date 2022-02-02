@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TEST 9 First three.js app</title>
+    <title>TEST 10 First three.js app</title>
     <style>
         body {
             margin: 0;
@@ -15,10 +15,16 @@
     <!--First import the code for three.js and FirstPersonController from file-->
     <script src="js/three.js"></script>
     <script src="js/FirstPersonControls.js"></script>
+    <script type="module" src="js/VRButton.js"></script>
 
 
 
-    <script>
+    <script >
+        //import * as THREE from 'https://cdn.skypack.dev/three';
+
+
+        //import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+
 
         var renderer;
         var scene;
@@ -71,8 +77,9 @@
             fpcCamera.movementSpeed = 101
             fpcCamera.update(delta);
 
-
-            requestAnimationFrame(animate);
+            //TEST
+            //requestAnimationFrame(animate);
+            renderer.setAnimationLoop(animate)
 
             //Renders the scene
             renderer.render(scene, camera);
@@ -462,11 +469,11 @@
         }
 
         //Code necessery for WebXR
-        setupVR()
-        {
-            this.renderer.xr.enabled = true;
-            document.body.appendChild(VRButton.createButton(this.renderer));
-        }
+        //setupVR()
+        //{
+        //    this.renderer.xr.enabled = true;
+        //    document.body.appendChild(VRButton.createButton(this.renderer));
+        //}
 
     </script>
 </body>
