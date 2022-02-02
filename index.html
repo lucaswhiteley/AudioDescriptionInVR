@@ -80,8 +80,8 @@
             //TEST webxr
             //requestAnimationFrame(animate);
             renderer.setAnimationLoop(animate)
-            renderer.xr.enabled = true;
-
+            //renderer.xr.enabled = true;
+            setupVR();
 
 
             //Renders the scene
@@ -474,7 +474,7 @@
         //Code necessery for WebXR
         function setupVR()
         {
-            //this.renderer.xr.enabled = true;
+            this.renderer.xr.enabled = true;
             document.body.appendChild(VRButton.createButton(this.renderer));
         }
 
