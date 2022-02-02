@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TEST 10 First three.js app</title>
+    <title>11 AD three.js app</title>
     <style>
         body {
             margin: 0;
@@ -79,7 +79,7 @@
 
             //TEST
             //requestAnimationFrame(animate);
-            renderer.setAnimationLoop(animate)
+            renderer.setAnimationLoop(ANIMATE)
 
             //Renders the scene
             renderer.render(scene, camera);
@@ -469,11 +469,11 @@
         }
 
         //Code necessery for WebXR
-        //setupVR()
-        //{
-        //    this.renderer.xr.enabled = true;
-        //    document.body.appendChild(VRButton.createButton(this.renderer));
-        //}
+        setupVR()
+        {
+            this.renderer.xr.enabled = true;
+            document.body.appendChild(VRButton.createButton(this.renderer));
+        }
 
     </script>
 </body>
