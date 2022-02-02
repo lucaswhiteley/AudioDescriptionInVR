@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>11 AD three.js app</title>
+    <title>12 AD three.js app</title>
     <style>
         body {
             margin: 0;
@@ -77,9 +77,12 @@
             fpcCamera.movementSpeed = 101
             fpcCamera.update(delta);
 
-            //TEST
+            //TEST webxr
             //requestAnimationFrame(animate);
             renderer.setAnimationLoop(animate)
+            renderer.xr.enabled = true;
+
+
 
             //Renders the scene
             renderer.render(scene, camera);
@@ -471,7 +474,7 @@
         //Code necessery for WebXR
         function setupVR()
         {
-            this.renderer.xr.enabled = true;
+            //this.renderer.xr.enabled = true;
             document.body.appendChild(VRButton.createButton(this.renderer));
         }
 
