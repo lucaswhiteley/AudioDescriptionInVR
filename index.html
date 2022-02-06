@@ -15,9 +15,9 @@
     <!--First import the code for three.js and FirstPersonController from file-->
     <script src="js/three.js"></script>
     <script src="js/FirstPersonControls.js"></script>
-    <script type="module" src="js/VRButton.js"></script>
+    <!-- <script type="module" src="js/VRButton.js"></script> -->
 
-    <script >
+    <script>
         //import * as THREE from 'https://cdn.skypack.dev/three';
 
 
@@ -40,22 +40,20 @@
         var clock = new THREE.Clock();
 
         class ThreeDObject {
-            constructor(colour, shape, x, y, z, distance, angle) {
+            constructor(colour, shape, x, y, z, texture, distance, angle) {
                 this.colour = colour;
                 this.shape = shape;
                 this.x = x;
                 this.y = y;
                 this.z = z;
+                this.theTexture = texture;
                 this.theDistance = -1;
                 this.theAngle = -1;
+
 
                 //this.angle = -1;
             }
         }
-
-        //var red = "0xff1100";
-        //var green = "0x00ff59";
-        //var purple = "0xff00e1";
 
         var threeDObjectArray = [];
 
@@ -78,7 +76,7 @@
             //requestAnimationFrame(animate);
             renderer.setAnimationLoop(animate)
             //renderer.xr.enabled = true;
-            //setupVR();
+
 
 
             //Renders the scene
@@ -88,6 +86,7 @@
         //Initialises the scene and other essential things before the program runs
         function itit() {
 
+            //setupVR();
 
             //ititialises the renderer and sets it to the size of the window
             renderer = new THREE.WebGLRenderer();
@@ -151,16 +150,19 @@
                         geometry = new THREE.BoxGeometry(100, 100, 100)
                         break;
                     case 2:
-                        //Sphere
+                        //Sphere 
                         objectShape = "Sphere";
                         geometry = new THREE.SphereGeometry(60)
                         break;
                     case 3:
                         //Cone
                         objectShape = "Cone";
-
                         geometry = new THREE.ConeGeometry(50, 100)
                         break;
+                    case 4:
+                        //Painting of the Mona Lisa
+                        objectShape = "Painting"
+                        geometry = new THREE.BoxGeometry(100, 100, 10)
                 }
 
                 //choosing the colour of the object
@@ -181,8 +183,43 @@
                         objectColour = "Purple Pizzazz";
                         material = new THREE.MeshBasicMaterial({ color: 0xff00e1 });
                         break;
+                    default:
+                        objectColour = null;
+
                 }
 
+                //if the object is a box then 
+                if (objectShape == "Box") {
+                    //choosing the texture of the object
+                    let y = Math.floor(Math.random() * 3) + 1;
+                    switch (y) {
+                        case 1:
+                            //Mona Lisa Painting
+                            objectTexture = "Mona Lisa"
+                            material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('MonaLisa.jpg'), side: THREE.DoubleSide });
+                            console.log("ObjectTexture: " + objectTexture);
+
+                            break;
+                        case 2:
+                            //The Scream Painting
+                            objectTexture = "The Scream"
+                            material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('TheScream.jpg'), side: THREE.DoubleSide });
+                            console.log("ObjectTexture: " + objectTexture);
+
+                            break;
+                        case 3:
+                            //The Scream Painting
+                            objectTexture = "Starry Night"                            
+                            material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('StarryNight.jpg'), side: THREE.DoubleSide });
+                            console.log("ObjectTexture: " + objectTexture);
+
+                            break;
+                        default:
+                            objectTexture = null;
+                    }
+                } else {
+                    objectTexture = null;
+                }
 
                 mesh = new THREE.Mesh(geometry, material)
                 //since 0 is the middle of the plane, the position could be negative too
@@ -222,7 +259,7 @@
                 console.log("ObjectsZ: " + objectsZ)
 
                 //creating the object and adding to the array
-                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z);
+                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture);
                 threeDObjectArray[i] = newObject;
                 console.log(threeDObjectArray[i]);
                 console.log(threeDObjectArray.length);
@@ -279,12 +316,13 @@
                 //reads the messasge outloud
                 readAD()
 
-                //Debug information for the "undefined" bug
+                //Debug information for the "undefined" objects
                 for (let c = 0; c < adScript.length; c++) {
                     if (adScript[c].includes(undefined)) {
                         console.log("Undefined Name: " + adScript[c]);
                         console.log("Undefined Shape?: " + threeDObjectArray[c].shape);
                         console.log("Undefined Colour?: " + threeDObjectArray[c].color);
+                        console.log("Undefined Texture?: " + threeDObjectArray[c].texture);
                         console.log("Undefined x?: " + threeDObjectArray[c].x);
                         console.log("Undefined y?: " + threeDObjectArray[c].y);
                         console.log("Undefined z?: " + threeDObjectArray[c].z);
@@ -301,7 +339,7 @@
         function objectArrayToString() {
             for (let a = 0; a < threeDObjectArray.length; a++) {
 
-                console.log("Colour: " + threeDObjectArray[a].colour + " & Shape: " + threeDObjectArray[a].shape)
+                console.log("Colour: " + threeDObjectArray[a].colour + " & Shape: " + threeDObjectArray[a].shape + " & Texture: " + threeDObjectArray[a].theTexture)
 
             }
         }
@@ -427,6 +465,9 @@
                     case "Purple Pizzazz":
                         adScript[b] += "purple"
                         break;
+                    case null:
+                        adScript[b] += ""
+                        break;
                     default:
                         adScript[b] += ""
                         break;
@@ -448,6 +489,24 @@
                         adScript[b] += ""
                         break;
                 }
+
+                //Loops through and texture details if there is one
+                //rework with if statements to with distance too
+                switch (threeDObjectArray[b].theTexture) {
+                    case "Mona Lisa":
+                        adScript[b] += " With a picture of the Mona Lisa."
+                        break;
+                    case "The Scream":
+                        adScript[b] += " With a picture of The Scream."
+                        break;
+                    case "Starry Night ":
+                        adScript[b] += " With a picture of Starry Night"
+                        break;
+                    default:
+                        adScript[b] += ""
+                        break;
+                }
+
             }
 
             return adScript
@@ -468,12 +527,13 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        //Code necessery for WebXR
-        function setupVR()
-        {
-            this.renderer.xr.enabled = true;
-            document.body.appendChild(VRButton.createButton(this.renderer));
-        }
+        // //Code necessery for WebXR
+        // function setupVR()
+        // {
+        //     this.renderer.xr.enabled = true;
+        //     document.body.appendChild(VRButton.createButton(this.renderer));
+        //     console.log("VR SETUP");
+        // }
 
     </script>
 </body>
