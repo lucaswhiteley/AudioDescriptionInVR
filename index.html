@@ -209,7 +209,7 @@
                             break;
                         case 3:
                             //The Scream Painting
-                            objectTexture = "Starry Night"                            
+                            objectTexture = "Starry Night"
                             material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('StarryNight.jpg'), side: THREE.DoubleSide });
                             console.log("ObjectTexture: " + objectTexture);
 
@@ -491,16 +491,38 @@
                 }
 
                 //Loops through and texture details if there is one
-                //rework with if statements to with distance too
+                //rework with switch(true)? 
                 switch (threeDObjectArray[b].theTexture) {
                     case "Mona Lisa":
-                        adScript[b] += " With a picture of the Mona Lisa."
+                        //Changes the description of the painting based on the distance
+                        if (threeDObjectArray[b].theDistance <= 300) {
+                            adScript[b] += " On the box there is the famous painting the Mona Lisa by Leonardo Da Vinci."
+                        } else if (threeDObjectArray[b].theDistance <= 700) {
+                            adScript[b] += " There is a painting of a woman in black on the box."
+                        } else if (threeDObjectArray[b].theDistance < 950) {
+                            adScript[b] += " There is a painting on the side of the box."
+                        }
+
                         break;
                     case "The Scream":
-                        adScript[b] += " With a picture of The Scream."
-                        break;
-                    case "Starry Night ":
-                        adScript[b] += " With a picture of Starry Night"
+                        //Changes the description of the painting based on the distance
+                        if (threeDObjectArray[b].theDistance <= 300) {
+                            adScript[b] += " On the box there is the painting the Scream by Edvard Munch."
+                        } else if (threeDObjectArray[b].theDistance <= 700) {
+                            adScript[b] += " There is a painting of a man in black stood by a river on the box."
+                        } else if (threeDObjectArray[b].theDistance < 950) {
+                            adScript[b] += " There is a colourful painting on the side of the box."
+                        }
+                        break; 
+                    case "Starry Night":
+                        //Changes the description of the painting based on the distance
+                        if (threeDObjectArray[b].theDistance <= 300) {
+                            adScript[b] += " On the box there is the painting Starry Night by Vincent van Gogh."
+                        } else if (threeDObjectArray[b].theDistance <= 700) {
+                            adScript[b] += " There is a painting of a city skyline during sunrise on the box."
+                        } else if (threeDObjectArray[b].theDistance < 950) {
+                            adScript[b] += " There is a colourful painting on the side of the box."
+                        }
                         break;
                     default:
                         adScript[b] += ""
