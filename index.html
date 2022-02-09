@@ -455,24 +455,25 @@
                 }
 
                 //Loops through and adds the Colour
-                switch (threeDObjectArray[b].colour) {
-                    case "red":
-                        adScript[b] += "red"
-                        break;
-                    case "Spring Green":
-                        adScript[b] += "green"
-                        break;
-                    case "Purple Pizzazz":
-                        adScript[b] += "purple"
-                        break;
-                    case null:
-                        adScript[b] += ""
-                        break;
-                    default:
-                        adScript[b] += ""
-                        break;
+                if (threeDObjectArray[b].theTexture == null) {
+                    switch (threeDObjectArray[b].colour) {
+                        case "red":
+                            adScript[b] += "red"
+                            break;
+                        case "Spring Green":
+                            adScript[b] += "green"
+                            break;
+                        case "Purple Pizzazz":
+                            adScript[b] += "purple"
+                            break;
+                        case null:
+                            adScript[b] += ""
+                            break;
+                        default:
+                            adScript[b] += ""
+                            break;
+                    }
                 }
-
 
                 //Loops through and adds the shape
                 switch (threeDObjectArray[b].shape) {
@@ -513,7 +514,7 @@
                         } else if (threeDObjectArray[b].theDistance < 950) {
                             adScript[b] += " There is a colourful painting on the side of the box."
                         }
-                        break; 
+                        break;
                     case "Starry Night":
                         //Changes the description of the painting based on the distance
                         if (threeDObjectArray[b].theDistance <= 300) {
