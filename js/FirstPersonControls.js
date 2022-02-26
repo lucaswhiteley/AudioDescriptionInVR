@@ -64,6 +64,7 @@
 
 			};
 
+			
 			this.onMouseDown = function ( event ) {
 
 				if ( this.domElement !== document ) {
@@ -322,6 +323,7 @@
 				lon = THREE.MathUtils.radToDeg( _spherical.theta );
 
 			}
+
 
 			this.handleResize();
 			setOrientation( this );

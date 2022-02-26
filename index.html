@@ -15,14 +15,16 @@
     <!--First import the code for three.js and FirstPersonController from file-->
     <script src="js/three.js"></script>
     <script src="js/FirstPersonControls.js"></script>
+    <script src="js/webxr-polyfill.js"></script>
+
     <!-- <script type="module" src="js/VRButton.js"></script> -->
 
     <script>
-        //import * as THREE from 'https://cdn.skypack.dev/three';
+
+        var polyfill = new WebXRPolyfill();
 
 
-        //import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
-
+        //Creates some Three.js necessities
         var renderer;
         var scene;
         var camera;
@@ -132,7 +134,7 @@
             var objectsX = [];
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
-
+            
             var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
             //var numToGen = 1;
@@ -303,7 +305,8 @@
                 objectArrayToString();
 
                 theAngles = workOutAngles();
-                console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
+                
+                //console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
 
                 //CALLS for the creation of the Audio Description
                 createAD()
@@ -315,6 +318,9 @@
 
                 //reads the messasge outloud
                 readAD()
+
+                //GETS THE CAMERA QUATERNION
+                //getCameraQuaternion()
 
                 //Debug information for the "undefined" objects
                 for (let c = 0; c < adScript.length; c++) {
@@ -422,116 +428,120 @@
             //Clears the previous AD
             adScript.length = 0;
 
-            //loops through the array and creates a line for each part.
-            for (let b = 0; b < threeDObjectArray.length; b++) {
-                if (threeDObjectArray[b].theDistance <= 200) {
-                    a = randomInt(3);
-                    if (a == 1) {
-                        adScript[b] = "Very close up there is a ";
-                    } else if (a == 2) {
-                        adScript[b] = "Within reach there is a ";
-                    } else if (a == 3) {
-                        adScript[b] = "Directly in front of you there is a ";
+            if (threeDObjectArray.length != 0) {
+                //loops through the array and creates a line for each part.
+                for (let b = 0; b < threeDObjectArray.length; b++) {
+                    if (threeDObjectArray[b].theDistance <= 200) {
+                        a = randomInt(3);
+                        if (a == 1) {
+                            adScript[b] = "Very close up there is a ";
+                        } else if (a == 2) {
+                            adScript[b] = "Within reach there is a ";
+                        } else if (a == 3) {
+                            adScript[b] = "Directly in front of you there is a ";
+                        }
+
+                    } else if (threeDObjectArray[b].theDistance <= 600) {
+                        c = randomInt(2);
+                        if (c == 1) {
+                            adScript[b] = "At a medium distance there is a ";
+                        } else if (c == 2) {
+                            adScript[b] = "Not too far away there is a ";
+                        }
+
+                        //} else if (threeDObjectArray[b].theDistance < 950) {
+                        //adScript[b] = "In the far distance, you can see a ";
+                    } else {
+                        e = randomInt(2);
+                        if (e == 1) {
+                            adScript[b] = "In the distance, You can faintly see a ";
+                        } else if (e == 2) {
+                            adScript[b] = "Beyond the horizon there is a ";
+
+                        }
                     }
 
-                } else if (threeDObjectArray[b].theDistance <= 600) {
-                    c = randomInt(2);
-                    if (c == 1) {
-                        adScript[b] = "At a medium distance there is a ";
-                    } else if (c == 2) {
-                        adScript[b] = "Not too far away there is a ";
+                    //Loops through and adds the Colour
+                    if (threeDObjectArray[b].theTexture == null) {
+                        switch (threeDObjectArray[b].colour) {
+                            case "red":
+                                adScript[b] += "red"
+                                break;
+                            case "Spring Green":
+                                adScript[b] += "green"
+                                break;
+                            case "Purple Pizzazz":
+                                adScript[b] += "purple"
+                                break;
+                            case null:
+                                adScript[b] += ""
+                                break;
+                            default:
+                                adScript[b] += ""
+                                break;
+                        }
                     }
 
-                    //} else if (threeDObjectArray[b].theDistance < 950) {
-                    //adScript[b] = "In the far distance, you can see a ";
-                } else {
-                    e = randomInt(2);
-                    if (e == 1) {
-                        adScript[b] = "In the distance, You can faintly see a ";
-                    } else if (e == 2) {
-                        adScript[b] = "Beyond the horizon there is a ";
-
-                    }
-                }
-
-                //Loops through and adds the Colour
-                if (threeDObjectArray[b].theTexture == null) {
-                    switch (threeDObjectArray[b].colour) {
-                        case "red":
-                            adScript[b] += "red"
+                    //Loops through and adds the shape
+                    switch (threeDObjectArray[b].shape) {
+                        case "Box":
+                            adScript[b] += " Box."
                             break;
-                        case "Spring Green":
-                            adScript[b] += "green"
+                        case "Sphere":
+                            adScript[b] += " Sphere."
                             break;
-                        case "Purple Pizzazz":
-                            adScript[b] += "purple"
-                            break;
-                        case null:
-                            adScript[b] += ""
+                        case "Cone":
+                            adScript[b] += " Cone."
                             break;
                         default:
                             adScript[b] += ""
                             break;
                     }
+
+                    //Loops through and texture details if there is one
+                    //rework with switch(true)? 
+                    switch (threeDObjectArray[b].theTexture) {
+                        case "Mona Lisa":
+                            //Changes the description of the painting based on the distance
+                            if (threeDObjectArray[b].theDistance <= 300) {
+                                adScript[b] += " On the box there is the famous painting the Mona Lisa by Leonardo Da Vinci."
+                            } else if (threeDObjectArray[b].theDistance <= 700) {
+                                adScript[b] += " There is a painting of a woman in black on the box."
+                            } else if (threeDObjectArray[b].theDistance < 950) {
+                                adScript[b] += " There is a painting on the side of the box."
+                            }
+
+                            break;
+                        case "The Scream":
+                            //Changes the description of the painting based on the distance
+                            if (threeDObjectArray[b].theDistance <= 300) {
+                                adScript[b] += " On the box there is the painting the Scream by Edvard Munch."
+                            } else if (threeDObjectArray[b].theDistance <= 700) {
+                                adScript[b] += " There is a painting of a man in black stood by a river on the box."
+                            } else if (threeDObjectArray[b].theDistance < 950) {
+                                adScript[b] += " There is a colourful painting on the side of the box."
+                            }
+                            break;
+                        case "Starry Night":
+                            //Changes the description of the painting based on the distance
+                            if (threeDObjectArray[b].theDistance <= 300) {
+                                adScript[b] += " On the box there is the painting Starry Night by Vincent van Gogh."
+                            } else if (threeDObjectArray[b].theDistance <= 700) {
+                                adScript[b] += " There is a painting of a city skyline during sunrise on the box."
+                            } else if (threeDObjectArray[b].theDistance < 950) {
+                                adScript[b] += " There is a colourful painting on the side of the box."
+                            }
+                            break;
+                        default:
+                            adScript[b] += ""
+                            break;
+                    }
+
                 }
-
-                //Loops through and adds the shape
-                switch (threeDObjectArray[b].shape) {
-                    case "Box":
-                        adScript[b] += " Box."
-                        break;
-                    case "Sphere":
-                        adScript[b] += " Sphere."
-                        break;
-                    case "Cone":
-                        adScript[b] += " Cone."
-                        break;
-                    default:
-                        adScript[b] += ""
-                        break;
-                }
-
-                //Loops through and texture details if there is one
-                //rework with switch(true)? 
-                switch (threeDObjectArray[b].theTexture) {
-                    case "Mona Lisa":
-                        //Changes the description of the painting based on the distance
-                        if (threeDObjectArray[b].theDistance <= 300) {
-                            adScript[b] += " On the box there is the famous painting the Mona Lisa by Leonardo Da Vinci."
-                        } else if (threeDObjectArray[b].theDistance <= 700) {
-                            adScript[b] += " There is a painting of a woman in black on the box."
-                        } else if (threeDObjectArray[b].theDistance < 950) {
-                            adScript[b] += " There is a painting on the side of the box."
-                        }
-
-                        break;
-                    case "The Scream":
-                        //Changes the description of the painting based on the distance
-                        if (threeDObjectArray[b].theDistance <= 300) {
-                            adScript[b] += " On the box there is the painting the Scream by Edvard Munch."
-                        } else if (threeDObjectArray[b].theDistance <= 700) {
-                            adScript[b] += " There is a painting of a man in black stood by a river on the box."
-                        } else if (threeDObjectArray[b].theDistance < 950) {
-                            adScript[b] += " There is a colourful painting on the side of the box."
-                        }
-                        break;
-                    case "Starry Night":
-                        //Changes the description of the painting based on the distance
-                        if (threeDObjectArray[b].theDistance <= 300) {
-                            adScript[b] += " On the box there is the painting Starry Night by Vincent van Gogh."
-                        } else if (threeDObjectArray[b].theDistance <= 700) {
-                            adScript[b] += " There is a painting of a city skyline during sunrise on the box."
-                        } else if (threeDObjectArray[b].theDistance < 950) {
-                            adScript[b] += " There is a colourful painting on the side of the box."
-                        }
-                        break;
-                    default:
-                        adScript[b] += ""
-                        break;
-                }
-
             }
-
+            else {
+                adScript[0] = "You are standing in a room with black walls and a blue floor. You cannot see any objects."
+            }
             return adScript
         }
 
@@ -549,6 +559,12 @@
             utterance.text = adMessage;
             window.speechSynthesis.speak(utterance);
         }
+
+        //function getCameraQuaternion(){
+        //    CamQuat = fpcCamera.getOrientation();
+        //    console.log("Camera Quaternion " + CamQuat);
+//
+  //      }
 
         // //Code necessery for WebXR
         // function setupVR()
