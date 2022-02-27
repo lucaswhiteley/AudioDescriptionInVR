@@ -134,7 +134,7 @@
             var objectsX = [];
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
-            
+
             var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
             //var numToGen = 1;
@@ -305,8 +305,10 @@
                 objectArrayToString();
 
                 theAngles = workOutAngles();
-                
+
                 //console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
+               // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
+
 
                 //CALLS for the creation of the Audio Description
                 createAD()
@@ -429,8 +431,27 @@
             adScript.length = 0;
 
             if (threeDObjectArray.length != 0) {
+
+
                 //loops through the array and creates a line for each part.
                 for (let b = 0; b < threeDObjectArray.length; b++) {
+
+                    // //Creates a line about the angle/ direction of the object
+                    // if (threeDObjectArray[b].theAngle <= 25 && threeDObjectArray[b].theAngle < 8) {
+
+                    //     adScript[b] = "On the right, ";
+
+                    // } else if (threeDObjectArray[b].theAngle <= 8 && threeDObjectArray[b].theAngle < -9) {
+
+                    //     adScript[b] = "On the left, ";
+
+                    // } else if (threeDObjectArray[b].theAngle <= -9 && threeDObjectArray[b].theAngle < -26) {
+
+                    //     adScript[b] = "In the centre,  ";
+                    // }
+
+
+                    //Distance
                     if (threeDObjectArray[b].theDistance <= 200) {
                         a = randomInt(3);
                         if (a == 1) {
@@ -455,11 +476,13 @@
                         e = randomInt(2);
                         if (e == 1) {
                             adScript[b] = "In the distance, You can faintly see a ";
-                        } else if (e == 2) {
+                        } else if (e == 2) { 
                             adScript[b] = "Beyond the horizon there is a ";
 
                         }
                     }
+
+
 
                     //Loops through and adds the Colour
                     if (threeDObjectArray[b].theTexture == null) {
