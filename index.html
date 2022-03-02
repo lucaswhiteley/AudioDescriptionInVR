@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>13 AD three.js app</title>
+    <title>14 AD three.js app</title>
     <style>
         body {
             margin: 0;
@@ -34,6 +34,7 @@
         var cameraY;
         var cameraZ;
 
+
         //Array to store the Audiodescription Script
         var adScript = [];
         //The actual message that will be read out
@@ -42,7 +43,7 @@
         var clock = new THREE.Clock();
 
         class ThreeDObject {
-            constructor(colour, shape, x, y, z, texture, distance, angle) {
+            constructor(colour, shape, x, y, z, texture, distance, angle, position) {
                 this.colour = colour;
                 this.shape = shape;
                 this.x = x;
@@ -51,6 +52,7 @@
                 this.theTexture = texture;
                 this.theDistance = -1;
                 this.theAngle = -1;
+                this.position = position;
 
 
                 //this.angle = -1;
@@ -135,9 +137,9 @@
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random() * 5) + 2;
+            //var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
-            //var numToGen = 1;
+             var numToGen = 1;
 
             //generates between 2 and 5 cubes
             for (let i = 0; i < numToGen; i++) {
@@ -261,7 +263,7 @@
                 console.log("ObjectsZ: " + objectsZ)
 
                 //creating the object and adding to the array
-                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture);
+                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position);
                 threeDObjectArray[i] = newObject;
                 console.log(threeDObjectArray[i]);
                 console.log(threeDObjectArray.length);
@@ -277,26 +279,27 @@
         function onKeyDown(e) {
             if (e.keyCode == "32") {
 
-                console.log("Camera Vitals: ")
+                //console.log("Camera Vitals: ")
 
-                console.log("Camera X Position = " + camera.position.x)
-                console.log("Camera Y Position = " + camera.position.y)
-                console.log("Camera Z Position = " + camera.position.z)
-                console.log("Camera Quaternian X = " + camera.quaternion.x)
+                //console.log("Camera X Position = " + camera.position.x)
+                //console.log("Camera Y Position = " + camera.position.y)
+                //console.log("Camera Z Position = " + camera.position.z)
+                //console.log("Camera Quaternian X = " + camera.quaternion.x)
                 // camera.quaternion.y Returns the rotation of the camera in rad
-                console.log("Camera Quaternian Y = " + camera.quaternion.y)
+               // console.log("Camera Quaternian Y = " + camera.quaternion.y)
+
 
                 //broken
                 //var deg = convertRadDeg(camera.quaternion.y)
                 //console.log("Camera Quaternian Y in Degrees = " + deg)
 
 
-                console.log("Camera Quaternian Z = " + camera.quaternion.z)
-                console.log("Camera Quaternian W = " + camera.quaternion.w)
+                //console.log("Camera Quaternian Z = " + camera.quaternion.z)
+                //console.log("Camera Quaternian W = " + camera.quaternion.w)
 
                 //Quaternion rotation in degrees
-                console.log("Camera Quaternian Y in Degrees = " + camera.quaternion.y * (180 / Math.PI))
-                console.log("Camera Quaternian W in Degrees = " + camera.quaternion.w * (180 / Math.PI))
+                //console.log("Camera Quaternian Y in Degrees = " + camera.quaternion.y * (180 / Math.PI))
+                //console.log("Camera Quaternian W in Degrees = " + camera.quaternion.w * (180 / Math.PI))
 
                 console.log("Camera FOV = " + camera.fov)
 
@@ -305,9 +308,14 @@
                 objectArrayToString();
 
                 theAngles = workOutAngles();
+                console.log("Angles (Deg) = " + theAngles)
 
-                //console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
-               // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
+
+                console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
+                // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
+
+                //console.log("Camera Angle DEG = " + getVectorAngle() * (180 / Math.PI))
+                console.log("Camera Angle DEG = " + getVectorAngle())
 
 
                 //CALLS for the creation of the Audio Description
@@ -388,8 +396,22 @@
         function workOutAngles() {
             let angles = [];
             for (let a = 0; a < threeDObjectArray.length; a++) {
-                angles[a] = getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z);
+                angles[a] = THREE.Math.radToDeg(getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z));
+                
+                console.log(threeDObjectArray[a].shape + threeDObjectArray[a].theDistance + threeDObjectArray[a].theTexture);
+                
+                console.log("angle before adding camera rotation "+ angles[a])
+
+                
+                //adds the rotation of the camera
+                angles[a] = getVectorAngle() - angles[a];
+                console.log("camera rotation angle "+ getVectorAngle())
+
                 threeDObjectArray[a].theAngle = angles[a];
+
+                console.log("The Objects Angle: " + threeDObjectArray[a].theAngle)
+                
+
             }
             return angles;
         }
@@ -402,7 +424,29 @@
             return angleToCamera
         }
 
-        //
+        //returns the angle the camera is rotated
+        function getVectorAngle(target){
+
+            //approach 1, does not really seem to work
+
+            //var vector = new THREE.Vector3();
+            //gets the rotation vector of the camera
+            camera.getWorldDirection( vector );
+            //console.log("CAMERA VECTOR " + vector)
+            //Converts the vector to an angle
+            angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
+            console.log("CAMERA ANGLE " + angle)
+            
+            //approach 2
+            //var vector = new THREE.Vector3( 0, 0, - 1 );
+            //vector.applyQuaternion( camera.quaternion );
+            //angle = vector.angleTo( target.position );
+
+
+
+            return angle
+        }
+
 
         //function to work out the direction the camera is facing
         //currently does not work
@@ -476,7 +520,7 @@
                         e = randomInt(2);
                         if (e == 1) {
                             adScript[b] = "In the distance, You can faintly see a ";
-                        } else if (e == 2) { 
+                        } else if (e == 2) {
                             adScript[b] = "Beyond the horizon there is a ";
 
                         }
