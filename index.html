@@ -137,9 +137,9 @@
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            //var numToGen = Math.floor(Math.random() * 5) + 2;
+            var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
-             var numToGen = 1;
+             //var numToGen = 1;
 
             //generates between 2 and 5 cubes
             for (let i = 0; i < numToGen; i++) {
@@ -303,6 +303,8 @@
 
                 console.log("Camera FOV = " + camera.fov)
 
+                //getCameraDirection();
+
                 theDistances = workOutDistance();
                 console.log("Distances = " + theDistances)
                 objectArrayToString();
@@ -315,7 +317,7 @@
                 // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
 
                 //console.log("Camera Angle DEG = " + getVectorAngle() * (180 / Math.PI))
-                console.log("Camera Angle DEG = " + getVectorAngle())
+                //console.log("Camera Angle DEG = " + getVectorAngle())
 
 
                 //CALLS for the creation of the Audio Description
@@ -404,8 +406,8 @@
 
                 
                 //adds the rotation of the camera
-                angles[a] = getVectorAngle() - angles[a];
-                console.log("camera rotation angle "+ getVectorAngle())
+                //angles[a] = getVectorAngle() - angles[a];
+                //console.log("camera rotation angle "+ getVectorAngle())
 
                 threeDObjectArray[a].theAngle = angles[a];
 
@@ -424,37 +426,39 @@
             return angleToCamera
         }
 
-        //returns the angle the camera is rotated
-        function getVectorAngle(target){
+        // //returns the angle the camera is rotated
+        // function getVectorAngle(target){
 
-            //approach 1, does not really seem to work
+        //     //approach 1, does not really seem to work
 
-            //var vector = new THREE.Vector3();
-            //gets the rotation vector of the camera
-            camera.getWorldDirection( vector );
-            //console.log("CAMERA VECTOR " + vector)
-            //Converts the vector to an angle
-            angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
-            console.log("CAMERA ANGLE " + angle)
+        //     var vector = new THREE.Vector3();
+        //     //gets the rotation vector of the camera
+        //     camera.getWorldDirection( vector );
+        //     //console.log("CAMERA VECTOR " + vector)
+        //     //Converts the vector to an angle
+        //     angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
+        //     console.log("CAMERA ANGLE " + angle)
             
-            //approach 2
-            //var vector = new THREE.Vector3( 0, 0, - 1 );
-            //vector.applyQuaternion( camera.quaternion );
-            //angle = vector.angleTo( target.position );
+        //     //approach 2
+        //     //var vector = new THREE.Vector3( 0, 0, - 1 );
+        //     //vector.applyQuaternion( camera.quaternion );
+        //     //angle = vector.angleTo( target.position );
 
 
-
-            return angle
-        }
+        //     return angle
+        // }
 
 
         //function to work out the direction the camera is facing
         //currently does not work
-        function getCameraDirection() {
+        // function getCameraDirection() {
 
-            vector = camera.quaternion
-            return vector
-        }
+        //     var vector = camera.getWorldDirection();
+        //     angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) ); 
+        
+        //     console.log(angle);
+
+        // }
 
         //converts Radians to degrees
         function convertRadDeg(rad) {
@@ -480,38 +484,52 @@
                 //loops through the array and creates a line for each part.
                 for (let b = 0; b < threeDObjectArray.length; b++) {
 
+
+                    fov = camera.fov;
+                    upperMiddleFov = (fov/2) - (fov/3)
+                    lowerMiddleFov = -(fov/2) + (fov/3)
+                    rightFov = fov/2
+                    leftFov = -(fov/2)
+                     
+                    console.log("1")
+                    console.log(threeDObjectArray[b].theAngle)
                     // //Creates a line about the angle/ direction of the object
-                    // if (threeDObjectArray[b].theAngle <= 25 && threeDObjectArray[b].theAngle < 8) {
+                     if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
 
-                    //     adScript[b] = "On the right, ";
+                         adScript[b] = "On the right, ";
+                         console.log("2")
 
-                    // } else if (threeDObjectArray[b].theAngle <= 8 && threeDObjectArray[b].theAngle < -9) {
+                     } else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
+                         adScript[b] = "On the left, ";
+                         console.log("3")
 
-                    //     adScript[b] = "On the left, ";
+                     } else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
 
-                    // } else if (threeDObjectArray[b].theAngle <= -9 && threeDObjectArray[b].theAngle < -26) {
+                         adScript[b] = "In the centre,  ";
+                         console.log("4")
 
-                    //     adScript[b] = "In the centre,  ";
-                    // }
+                     }
+                     console.log("5")
+                     
 
 
                     //Distance
                     if (threeDObjectArray[b].theDistance <= 200) {
                         a = randomInt(3);
                         if (a == 1) {
-                            adScript[b] = "Very close up there is a ";
+                            adScript[b] += "Very close up there is a ";
                         } else if (a == 2) {
-                            adScript[b] = "Within reach there is a ";
+                            adScript[b] += "Within reach there is a ";
                         } else if (a == 3) {
-                            adScript[b] = "Directly in front of you there is a ";
+                            adScript[b] += "Directly in front of you there is a ";
                         }
 
                     } else if (threeDObjectArray[b].theDistance <= 600) {
                         c = randomInt(2);
                         if (c == 1) {
-                            adScript[b] = "At a medium distance there is a ";
+                            adScript[b] += "At a medium distance there is a ";
                         } else if (c == 2) {
-                            adScript[b] = "Not too far away there is a ";
+                            adScript[b] += "Not too far away there is a ";
                         }
 
                         //} else if (threeDObjectArray[b].theDistance < 950) {
@@ -519,9 +537,9 @@
                     } else {
                         e = randomInt(2);
                         if (e == 1) {
-                            adScript[b] = "In the distance, You can faintly see a ";
+                            adScript[b] += "In the distance, You can faintly see a ";
                         } else if (e == 2) {
-                            adScript[b] = "Beyond the horizon there is a ";
+                            adScript[b] += "Beyond the horizon there is a ";
 
                         }
                     }
