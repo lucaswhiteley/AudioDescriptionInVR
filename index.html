@@ -484,34 +484,22 @@
                 //loops through the array and creates a line for each part.
                 for (let b = 0; b < threeDObjectArray.length; b++) {
 
-
+                    //Uses the camera's FOV to decide which direction the ad is facing.
                     fov = camera.fov;
                     upperMiddleFov = (fov/2) - (fov/3)
                     lowerMiddleFov = -(fov/2) + (fov/3)
                     rightFov = fov/2
                     leftFov = -(fov/2)
-                     
-                    console.log("1")
-                    console.log(threeDObjectArray[b].theAngle)
+                 
                     // //Creates a line about the angle/ direction of the object
                      if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
-
                          adScript[b] = "On the right, ";
-                         console.log("2")
-
                      } else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
                          adScript[b] = "On the left, ";
-                         console.log("3")
-
                      } else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
 
                          adScript[b] = "In the centre,  ";
-                         console.log("4")
-
                      }
-                     console.log("5")
-                     
-
 
                     //Distance
                     if (threeDObjectArray[b].theDistance <= 200) {
