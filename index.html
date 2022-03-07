@@ -312,12 +312,15 @@
                 theAngles = workOutAngles();
                 console.log("Angles (Deg) = " + theAngles)
 
+                getCameraRotation()
 
-                console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle * (180 / Math.PI))
+
+
+                console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle)
                 // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
 
                 //console.log("Camera Angle DEG = " + getVectorAngle() * (180 / Math.PI))
-                //console.log("Camera Angle DEG = " + getVectorAngle())
+                console.log("Camera Angle DEG = " + getVectorAngle())
 
 
                 //CALLS for the creation of the Audio Description
@@ -426,39 +429,54 @@
             return angleToCamera
         }
 
-        // //returns the angle the camera is rotated
-        // function getVectorAngle(target){
+        //returns the angle the camera is rotated
+        function getVectorAngle(target){
 
-        //     //approach 1, does not really seem to work
+            //approach 1, does not really seem to work
 
-        //     var vector = new THREE.Vector3();
-        //     //gets the rotation vector of the camera
-        //     camera.getWorldDirection( vector );
-        //     //console.log("CAMERA VECTOR " + vector)
-        //     //Converts the vector to an angle
-        //     angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
-        //     console.log("CAMERA ANGLE " + angle)
+            var vector = new THREE.Vector3();
+            //gets the rotation vector of the camera
+            camera.getWorldDirection( vector );
+            //console.log("CAMERA VECTOR " + vector)
+            //Converts the vector to an angle
+            angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
+            console.log("CAMERA ANGLE " + angle)
             
-        //     //approach 2
-        //     //var vector = new THREE.Vector3( 0, 0, - 1 );
-        //     //vector.applyQuaternion( camera.quaternion );
-        //     //angle = vector.angleTo( target.position );
+            //approach 2
+            //var vector = new THREE.Vector3( 0, 0, - 1 );
+            //vector.applyQuaternion( camera.quaternion );
+            //angle = vector.angleTo( target.position );
 
 
-        //     return angle
-        // }
+
+            return angle
+        }
+
+        //Function works out how many degrees the camera has rotated
+        //Seems to be working fine? Not sure why max is around 280 and min is around -80
+        function getCameraRotation()
+        {
+            //Camera starts out at -90
+            initialCameraAngle = -90;
+
+            cameraAngle = getVectorAngle()
+
+            currentRotation = cameraAngle - initialCameraAngle
+
+            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxx Current Rotation: " + currentRotation)
+        }
 
 
         //function to work out the direction the camera is facing
         //currently does not work
-        // function getCameraDirection() {
+        //  function getCameraDirection() {
 
-        //     var vector = camera.getWorldDirection();
-        //     angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) ); 
+        //      var vector = camera.getWorldDirection(vector);
+        //      angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) ); 
         
         //     console.log(angle);
 
-        // }
+        //  }
 
         //converts Radians to degrees
         function convertRadDeg(rad) {
@@ -490,16 +508,21 @@
                     lowerMiddleFov = -(fov/2) + (fov/3)
                     rightFov = fov/2
                     leftFov = -(fov/2)
-                 
-                    // //Creates a line about the angle/ direction of the object
-                     if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
-                         adScript[b] = "On the right, ";
-                     } else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
-                         adScript[b] = "On the left, ";
-                     } else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
+                    
+                    //Testing the FOV calculations
+                    //console.log("Fov = " + fov + "upperMiddleFov = " + upperMiddleFov + "lowerMiddleFov = " + lowerMiddleFov + "rightFov = " + rightFov + "leftFov" + leftFov)
 
-                         adScript[b] = "In the centre,  ";
-                     }
+                    adScript[b] = "";
+
+                    // //Creates a line about the angle/ direction of the object
+                     //if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
+                         //adScript[b] = "On the right, ";
+                     //} else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
+                         //adScript[b] = "On the left, ";
+                     //} else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
+
+                        // adScript[b] = "In the centre,  ";
+                    // }
 
                     //Distance
                     if (threeDObjectArray[b].theDistance <= 200) {
