@@ -62,7 +62,7 @@
         var threeDObjectArray = [];
 
         //initialises the scene
-        itit();
+        init();
         //populates the scene with objects
         populate();
         //animates the scene (primarily camera movement)
@@ -88,11 +88,11 @@
         }
 
         //Initialises the scene and other essential things before the program runs
-        function itit() {
+        function init() {
 
             //setupVR();
 
-            //ititialises the renderer and sets it to the size of the window
+            //initialises the renderer and sets it to the size of the window
             renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement)
@@ -107,7 +107,7 @@
             //Initialises the camera
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
             camera.position.set(40, 40, 400);
-            camera.lookAt(100, 40, 400);
+            camera.lookAt(0, 40, 400);
             scene.add(camera);
 
             cameraX = 0;
@@ -137,9 +137,9 @@
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random() * 5) + 2;
+            //var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
-             //var numToGen = 1;
+            var numToGen = 1;
 
             //generates between 2 and 5 cubes
             for (let i = 0; i < numToGen; i++) {
@@ -314,7 +314,7 @@
 
                 getCameraRotation()
 
-
+                isObjectOnScreen(threeDObjectArray[0]);
 
                 console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle)
                 // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
@@ -399,19 +399,24 @@
 
         //creates an array of the angles of objects to the camera
         function workOutAngles() {
+            //array of all the angles
             let angles = [];
+
+            //loops through the objects array and works out the angle for each
             for (let a = 0; a < threeDObjectArray.length; a++) {
+
+                //Works out the angle and converts it to degrees
                 angles[a] = THREE.Math.radToDeg(getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z));
                 
                 console.log(threeDObjectArray[a].shape + threeDObjectArray[a].theDistance + threeDObjectArray[a].theTexture);
                 
                 console.log("angle before adding camera rotation "+ angles[a])
-
                 
                 //adds the rotation of the camera
                 //angles[a] = getVectorAngle() - angles[a];
                 //console.log("camera rotation angle "+ getVectorAngle())
 
+                //sets the object's angle to the worked out angle
                 threeDObjectArray[a].theAngle = angles[a];
 
                 console.log("The Objects Angle: " + threeDObjectArray[a].theAngle)
@@ -425,30 +430,20 @@
         //does not take into account the rotation of the camera!!!
         function getAngle(x, z) {
             //formula for angle between = atan2
-            angleToCamera = Math.atan2(camera.position.x - x, camera.position.z - z);
+            angleToCamera = Math.atan2(-(camera.position.x - x), -(camera.position.z - z));
             return angleToCamera
         }
 
         //returns the angle the camera is rotated
-        function getVectorAngle(target){
-
-            //approach 1, does not really seem to work
+        function getVectorAngle(){
 
             var vector = new THREE.Vector3();
             //gets the rotation vector of the camera
-            camera.getWorldDirection( vector );
-            //console.log("CAMERA VECTOR " + vector)
-            //Converts the vector to an angle
+            camera.getWorldDirection(vector);
+            //Converts the vector to an angle in degrees
             angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
-            console.log("CAMERA ANGLE " + angle)
+            console.log("CAMERA ANGLE: " + angle)
             
-            //approach 2
-            //var vector = new THREE.Vector3( 0, 0, - 1 );
-            //vector.applyQuaternion( camera.quaternion );
-            //angle = vector.angleTo( target.position );
-
-
-
             return angle
         }
 
@@ -456,17 +451,61 @@
         //Seems to be working fine? Not sure why max is around 280 and min is around -80
         function getCameraRotation()
         {
-            //Camera starts out at -90
-            initialCameraAngle = -90;
-
+            //Camera starts out at 90
+            //So I offset by 90 to make the angle 0
+            //initialCameraAngle = 90;
             cameraAngle = getVectorAngle()
+            currentRotation = cameraAngle  //- initialCameraAngle
+            console.log("Current Camera Rotation: " + currentRotation)
 
-            currentRotation = cameraAngle - initialCameraAngle
-
-            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxx Current Rotation: " + currentRotation)
+            return currentRotation
         }
 
 
+        //THIS NEEDS TO BE TESTED
+
+        //checks if the angle of the object is within the angles the field of view of the camera
+        function isObjectOnScreen(object)
+        {
+            fov = camera.fov
+            lowfov = -(fov/2)
+            highfov = (fov/2)
+
+            cameraRotation = getCameraRotation()
+            lowCamera = cameraRotation + lowfov
+            highCamera = cameraRotation + highfov
+
+            console.log("Fov: " + fov)
+            console.log("lowfov: " + lowfov)
+            console.log("highfov: " + highfov)
+
+            console.log("cameraRotation: " + cameraRotation)
+            console.log("lowCamera: " + lowCamera)
+            console.log("highCamera: " + highCamera)
+
+
+
+
+            console.log("Fov: " + fov + " Camera Rotation:"+ cameraRotation)
+
+            objectAngle = object.theAngle;
+
+            if(objectAngle > lowCamera && objectAngle < highCamera){
+                console.log("------ YES -------")
+                console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
+
+                return true
+            }else{
+                console.log("------ NO -------")
+                console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
+                return false
+            }
+        }
+
+        function whatDirectionIsObject(object){
+
+
+        }
         //function to work out the direction the camera is facing
         //currently does not work
         //  function getCameraDirection() {
