@@ -34,6 +34,7 @@
         var cameraY;
         var cameraZ;
 
+        var objectsOnScreen = [];
 
         //Array to store the Audiodescription Script
         var adScript = [];
@@ -112,8 +113,6 @@
 
             cameraX = 0;
 
-
-            //IN PROGRESS
             fpcCamera = new THREE.FirstPersonControls(camera, document.body);
 
             var gloorGeometry = new THREE.PlaneGeometry(window.innerWidth * 2, window.innerHeight * 2, 1, 1);
@@ -128,6 +127,7 @@
 
             scene.add(floor);
 
+
         }
 
         //populates the scene with all of the objects
@@ -137,9 +137,9 @@
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            //var numToGen = Math.floor(Math.random() * 5) + 2;
+            var numToGen = Math.floor(Math.random() * 5) + 2;
             //test
-            var numToGen = 1;
+            //var numToGen = 1;
 
             //generates between 2 and 5 cubes
             for (let i = 0; i < numToGen; i++) {
@@ -286,26 +286,14 @@
                 //console.log("Camera Z Position = " + camera.position.z)
                 //console.log("Camera Quaternian X = " + camera.quaternion.x)
                 // camera.quaternion.y Returns the rotation of the camera in rad
-               // console.log("Camera Quaternian Y = " + camera.quaternion.y)
+                // console.log("Camera Quaternian Y = " + camera.quaternion.y)
 
-
-                //broken
-                //var deg = convertRadDeg(camera.quaternion.y)
-                //console.log("Camera Quaternian Y in Degrees = " + deg)
-
-
-                //console.log("Camera Quaternian Z = " + camera.quaternion.z)
-                //console.log("Camera Quaternian W = " + camera.quaternion.w)
-
-                //Quaternion rotation in degrees
-                //console.log("Camera Quaternian Y in Degrees = " + camera.quaternion.y * (180 / Math.PI))
-                //console.log("Camera Quaternian W in Degrees = " + camera.quaternion.w * (180 / Math.PI))
 
                 console.log("Camera FOV = " + camera.fov)
 
                 //getCameraDirection();
 
-                theDistances = workOutDistance();
+                theDistances = workOutDistance2();
                 console.log("Distances = " + theDistances)
                 objectArrayToString();
 
@@ -314,7 +302,9 @@
 
                 getCameraRotation()
 
-                isObjectOnScreen(threeDObjectArray[0]);
+                //what objects are on screen?
+                //isObjectOnScreen(threeDObjectArray[0]);
+
 
                 console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle)
                 // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
@@ -333,6 +323,10 @@
 
                 //reads the messasge outloud
                 readAD()
+
+                //whatObjectsAreOnScreen();
+
+
 
                 //GETS THE CAMERA QUATERNION
                 //getCameraQuaternion()
@@ -377,6 +371,20 @@
             return distances;
         }
 
+        //TEST
+        function workOutDistance2() {
+
+            //whatObjectsAreOnScreen()
+            let distances = [];
+            for (let a = 0; a < objectsOnScreen.length; a++) {
+                //distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
+                distances[a] = distanceWithoutY(objectsOnScreen[a].x, objectsOnScreen[a].z);
+                objectsOnScreen[a].theDistance = distances[a];
+            }
+
+            return distances;
+        }
+
         //calculates the distance between an object and the camera using the X,and Z coordinates as Y is the same between each
 
         function distanceWithoutY(x, z) {
@@ -385,17 +393,12 @@
 
         }
 
-
-
         //calculates the distance between an object and the camera using the X,Y, AND Z coordinates
         function distance(x, y, z) {
             //finds the distance between an object and the camera using Pythagoras theorem
             let distanceToCamera = Math.sqrt(Math.pow((camera.position.x - x), 2) + Math.pow((camera.position.y - y), 2) + Math.pow((camera.position.z - z), 2));
             return distanceToCamera;
         }
-
-
-        //NOT COMPLETE
 
         //creates an array of the angles of objects to the camera
         function workOutAngles() {
@@ -407,27 +410,22 @@
 
                 //Works out the angle and converts it to degrees
                 angles[a] = THREE.Math.radToDeg(getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z));
-                
+
                 console.log(threeDObjectArray[a].shape + threeDObjectArray[a].theDistance + threeDObjectArray[a].theTexture);
-                
-                console.log("angle before adding camera rotation "+ angles[a])
-                
-                //adds the rotation of the camera
-                //angles[a] = getVectorAngle() - angles[a];
-                //console.log("camera rotation angle "+ getVectorAngle())
+
+                console.log("angle before adding camera rotation " + angles[a])
 
                 //sets the object's angle to the worked out angle
                 threeDObjectArray[a].theAngle = angles[a];
 
                 console.log("The Objects Angle: " + threeDObjectArray[a].theAngle)
-                
+
 
             }
             return angles;
         }
 
         //works out the angle of an object and the camera
-        //does not take into account the rotation of the camera!!!
         function getAngle(x, z) {
             //formula for angle between = atan2
             angleToCamera = Math.atan2(-(camera.position.x - x), -(camera.position.z - z));
@@ -435,22 +433,21 @@
         }
 
         //returns the angle the camera is rotated
-        function getVectorAngle(){
+        function getVectorAngle() {
 
             var vector = new THREE.Vector3();
             //gets the rotation vector of the camera
             camera.getWorldDirection(vector);
             //Converts the vector to an angle in degrees
-            angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) );  
+            angle = THREE.Math.radToDeg(Math.atan2(vector.x, vector.z));
             console.log("CAMERA ANGLE: " + angle)
-            
+
             return angle
         }
 
         //Function works out how many degrees the camera has rotated
         //Seems to be working fine? Not sure why max is around 280 and min is around -80
-        function getCameraRotation()
-        {
+        function getCameraRotation() {
             //Camera starts out at 90
             //So I offset by 90 to make the angle 0
             //initialCameraAngle = 90;
@@ -461,61 +458,62 @@
             return currentRotation
         }
 
-
-        //THIS NEEDS TO BE TESTED
-
         //checks if the angle of the object is within the angles the field of view of the camera
-        function isObjectOnScreen(object)
-        {
+        function isObjectOnScreen(object) {
             fov = camera.fov
-            lowfov = -(fov/2)
-            highfov = (fov/2)
+            lowfov = -(fov / 2)
+            highfov = (fov / 2)
 
             cameraRotation = getCameraRotation()
             lowCamera = cameraRotation + lowfov
             highCamera = cameraRotation + highfov
 
-            console.log("Fov: " + fov)
-            console.log("lowfov: " + lowfov)
-            console.log("highfov: " + highfov)
-
-            console.log("cameraRotation: " + cameraRotation)
-            console.log("lowCamera: " + lowCamera)
-            console.log("highCamera: " + highCamera)
-
-
-
-
-            console.log("Fov: " + fov + " Camera Rotation:"+ cameraRotation)
+            console.log("Fov: " + fov + " Camera Rotation:" + cameraRotation)
 
             objectAngle = object.theAngle;
 
-            if(objectAngle > lowCamera && objectAngle < highCamera){
+            if (objectAngle > lowCamera && objectAngle < highCamera) {
                 console.log("------ YES -------")
                 console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
 
                 return true
-            }else{
+            } else {
                 console.log("------ NO -------")
                 console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
                 return false
             }
         }
 
-        function whatDirectionIsObject(object){
+        //loops through the array of objects and creates a new array with only the objects on screen
+        function whatObjectsAreOnScreen() {
 
+            //TEST
+           
 
+            objectsOnScreen.length = 0;
+
+            if (threeDObjectArray.length != 0) {
+                //loops through the array
+                for (let f = 0; f < threeDObjectArray.length; f++) {
+
+                    if (isObjectOnScreen(threeDObjectArray[f])) {
+                        //NEW
+                        objectsOnScreen.push(threeDObjectArray[f]);
+
+                    }
+                }
+            }
+
+            workOutDistance2();
+
+            console.log("OBJECTS ON SCREEN: " + JSON.stringify(objectsOnScreen));
+
+            //prints out the objects
+            for (let g = 0; g < threeDObjectArray.length; g++) {
+                console.log(objectsOnScreen[g])
+            }
+            
         }
-        //function to work out the direction the camera is facing
-        //currently does not work
-        //  function getCameraDirection() {
-
-        //      var vector = camera.getWorldDirection(vector);
-        //      angle = THREE.Math.radToDeg( Math.atan2(vector.x,vector.z) ); 
-        
-        //     console.log(angle);
-
-        //  }
 
         //converts Radians to degrees
         function convertRadDeg(rad) {
@@ -532,73 +530,96 @@
         //Creates the array of Audio Desctiption
         function createAD() {
 
+
             //Clears the previous AD
             adScript.length = 0;
 
-            if (threeDObjectArray.length != 0) {
+            //checks to see what objects are on screen
+            whatObjectsAreOnScreen()
+
+            if (objectsOnScreen.length != 0) {
 
 
                 //loops through the array and creates a line for each part.
-                for (let b = 0; b < threeDObjectArray.length; b++) {
+                for (let b = 0; b < objectsOnScreen.length; b++) {
 
                     //Uses the camera's FOV to decide which direction the ad is facing.
                     fov = camera.fov;
-                    upperMiddleFov = (fov/2) - (fov/3)
-                    lowerMiddleFov = -(fov/2) + (fov/3)
-                    rightFov = fov/2
-                    leftFov = -(fov/2)
-                    
+                    upperMiddleFov = (fov / 2) - (fov / 3)
+                    lowerMiddleFov = -(fov / 2) + (fov / 3)
+                    rightFov = fov / 2
+                    leftFov = -(fov / 2)
+
                     //Testing the FOV calculations
                     //console.log("Fov = " + fov + "upperMiddleFov = " + upperMiddleFov + "lowerMiddleFov = " + lowerMiddleFov + "rightFov = " + rightFov + "leftFov" + leftFov)
 
                     adScript[b] = "";
 
                     // //Creates a line about the angle/ direction of the object
-                     //if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
-                         //adScript[b] = "On the right, ";
-                     //} else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
-                         //adScript[b] = "On the left, ";
-                     //} else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
+                    //if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
+                    //adScript[b] = "On the right, ";
+                    //} else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
+                    //adScript[b] = "On the left, ";
+                    //} else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
 
-                        // adScript[b] = "In the centre,  ";
+                    // adScript[b] = "In the centre,  ";
                     // }
 
                     //Distance
-                    if (threeDObjectArray[b].theDistance <= 200) {
-                        a = randomInt(3);
-                        if (a == 1) {
-                            adScript[b] += "Very close up there is a ";
-                        } else if (a == 2) {
-                            adScript[b] += "Within reach there is a ";
-                        } else if (a == 3) {
-                            adScript[b] += "Directly in front of you there is a ";
-                        }
 
-                    } else if (threeDObjectArray[b].theDistance <= 600) {
-                        c = randomInt(2);
-                        if (c == 1) {
-                            adScript[b] += "At a medium distance there is a ";
-                        } else if (c == 2) {
-                            adScript[b] += "Not too far away there is a ";
-                        }
+                    if (objectsOnScreen[b].theDistance == undefined) {
 
-                        //} else if (threeDObjectArray[b].theDistance < 950) {
-                        //adScript[b] = "In the far distance, you can see a ";
+                        //For Debugging
+                        console.log("Camera Vitals: ")
+                        console.log("Camera X Position = " + camera.position.x)
+                        console.log("Camera Y Position = " + camera.position.y)
+                        console.log("Camera Z Position = " + camera.position.z)
+
+                        //Object vitals
+                        console.log("Object Vitals: ")
+                        console.log("X: " + objectsOnScreen[b].x)
+                        console.log("Y: " + objectsOnScreen[b].y)
+                        console.log("The Angle:  " + objectsOnScreen[b].theAngle)
+                        console.log("Distance: " + objectsOnScreen[b].theDistance)
+
+
                     } else {
-                        e = randomInt(2);
-                        if (e == 1) {
-                            adScript[b] += "In the distance, You can faintly see a ";
-                        } else if (e == 2) {
-                            adScript[b] += "Beyond the horizon there is a ";
 
+                        if (objectsOnScreen[b].theDistance <= 200) {
+                            a = randomInt(3);
+                            if (a == 1) {
+                                adScript[b] += "Very close up there is a ";
+                            } else if (a == 2) {
+                                adScript[b] += "Within reach there is a ";
+                            } else if (a == 3) {
+                                adScript[b] += "Directly in front of you there is a ";
+                            }
+
+                        } else if (objectsOnScreen[b].theDistance <= 600) {
+                            c = randomInt(2);
+                            if (c == 1) {
+                                adScript[b] += "At a medium distance there is a ";
+                            } else if (c == 2) {
+                                adScript[b] += "Not too far away there is a ";
+                            }
+
+                            //} else if (threeDObjectArray[b].theDistance < 950) {
+                            //adScript[b] = "In the far distance, you can see a ";
+                        } else {
+                            e = randomInt(2);
+                            if (e == 1) {
+                                adScript[b] += "In the distance, You can faintly see a ";
+                            } else if (e == 2) {
+                                adScript[b] += "Beyond the horizon there is a ";
+
+                            }
                         }
                     }
 
 
-
                     //Loops through and adds the Colour
-                    if (threeDObjectArray[b].theTexture == null) {
-                        switch (threeDObjectArray[b].colour) {
+                    if (objectsOnScreen[b].theTexture == null) {
+                        switch (objectsOnScreen[b].colour) {
                             case "red":
                                 adScript[b] += "red"
                                 break;
@@ -618,7 +639,7 @@
                     }
 
                     //Loops through and adds the shape
-                    switch (threeDObjectArray[b].shape) {
+                    switch (objectsOnScreen[b].shape) {
                         case "Box":
                             adScript[b] += " Box."
                             break;
@@ -635,35 +656,35 @@
 
                     //Loops through and texture details if there is one
                     //rework with switch(true)? 
-                    switch (threeDObjectArray[b].theTexture) {
+                    switch (objectsOnScreen[b].theTexture) {
                         case "Mona Lisa":
                             //Changes the description of the painting based on the distance
-                            if (threeDObjectArray[b].theDistance <= 300) {
+                            if (objectsOnScreen[b].theDistance <= 300) {
                                 adScript[b] += " On the box there is the famous painting the Mona Lisa by Leonardo Da Vinci."
-                            } else if (threeDObjectArray[b].theDistance <= 700) {
+                            } else if (objectsOnScreen[b].theDistance <= 700) {
                                 adScript[b] += " There is a painting of a woman in black on the box."
-                            } else if (threeDObjectArray[b].theDistance < 950) {
+                            } else if (objectsOnScreen[b].theDistance < 950) {
                                 adScript[b] += " There is a painting on the side of the box."
                             }
 
                             break;
                         case "The Scream":
                             //Changes the description of the painting based on the distance
-                            if (threeDObjectArray[b].theDistance <= 300) {
+                            if (objectsOnScreen[b].theDistance <= 300) {
                                 adScript[b] += " On the box there is the painting the Scream by Edvard Munch."
-                            } else if (threeDObjectArray[b].theDistance <= 700) {
+                            } else if (objectsOnScreen[b].theDistance <= 700) {
                                 adScript[b] += " There is a painting of a man in black stood by a river on the box."
-                            } else if (threeDObjectArray[b].theDistance < 950) {
+                            } else if (objectsOnScreen[b].theDistance < 950) {
                                 adScript[b] += " There is a colourful painting on the side of the box."
                             }
                             break;
                         case "Starry Night":
                             //Changes the description of the painting based on the distance
-                            if (threeDObjectArray[b].theDistance <= 300) {
+                            if (objectsOnScreen[b].theDistance <= 300) {
                                 adScript[b] += " On the box there is the painting Starry Night by Vincent van Gogh."
-                            } else if (threeDObjectArray[b].theDistance <= 700) {
+                            } else if (objectsOnScreen[b].theDistance <= 700) {
                                 adScript[b] += " There is a painting of a city skyline during sunrise on the box."
-                            } else if (threeDObjectArray[b].theDistance < 950) {
+                            } else if (objectsOnScreen[b].theDistance < 950) {
                                 adScript[b] += " There is a colourful painting on the side of the box."
                             }
                             break;
@@ -694,20 +715,6 @@
             utterance.text = adMessage;
             window.speechSynthesis.speak(utterance);
         }
-
-        //function getCameraQuaternion(){
-        //    CamQuat = fpcCamera.getOrientation();
-        //    console.log("Camera Quaternion " + CamQuat);
-//
-  //      }
-
-        // //Code necessery for WebXR
-        // function setupVR()
-        // {
-        //     this.renderer.xr.enabled = true;
-        //     document.body.appendChild(VRButton.createButton(this.renderer));
-        //     console.log("VR SETUP");
-        // }
 
     </script>
 </body>
