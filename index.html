@@ -545,25 +545,40 @@
 
                     //Uses the camera's FOV to decide which direction the ad is facing.
                     fov = camera.fov;
-                    upperMiddleFov = (fov / 2) - (fov / 3)
-                    lowerMiddleFov = -(fov / 2) + (fov / 3)
-                    rightFov = fov / 2
-                    leftFov = -(fov / 2)
+                    //Not tested yet 
+                    cameraRotation = getCameraRotation()
+
+                    upperMiddleFov = cameraRotation + (fov / 2) - (fov / 3)
+                    lowerMiddleFov = cameraRotation -(fov / 2) + (fov / 3)
+                    rightFov = cameraRotation + fov / 2
+                    leftFov = cameraRotation -(fov / 2)
 
                     //Testing the FOV calculations
-                    //console.log("Fov = " + fov + "upperMiddleFov = " + upperMiddleFov + "lowerMiddleFov = " + lowerMiddleFov + "rightFov = " + rightFov + "leftFov" + leftFov)
+                    console.log("Fov = " + fov + " upperMiddleFov = " + upperMiddleFov + " lowerMiddleFov = " + lowerMiddleFov + " rightFov = " + rightFov + " leftFov" + leftFov)
 
                     adScript[b] = "";
+                    console.log("1")
 
-                    // //Creates a line about the angle/ direction of the object
-                    //if (threeDObjectArray[b].theAngle <= rightFov && threeDObjectArray[b].theAngle < upperMiddleFov) {
-                    //adScript[b] = "On the right, ";
-                    //} else if (threeDObjectArray[b].theAngle <= upperMiddleFov && threeDObjectArray[b].theAngle < lowerMiddleFov) {
-                    //adScript[b] = "On the left, ";
-                    //} else if (threeDObjectArray[b].theAngle <= lowerMiddleFov && threeDObjectArray[b].theAngle < leftFov) {
+                    console.log("objectsOnScreen[b].theAngle: " + objectsOnScreen[b].theAngle)
 
-                    // adScript[b] = "In the centre,  ";
-                    // }
+                    //Creates a line about the angle/ direction of the object
+                    if (objectsOnScreen[b].theAngle <= rightFov && objectsOnScreen[b].theAngle > upperMiddleFov) {
+                        console.log("Left")
+
+                        adScript[b] += "On the Left, ";
+                    } else if (objectsOnScreen[b].theAngle <= upperMiddleFov && objectsOnScreen[b].theAngle > lowerMiddleFov) {
+                        console.log("Centre")
+
+                        adScript[b] += "In the centre, "; 
+
+                    } else if (objectsOnScreen[b].theAngle <= lowerMiddleFov && objectsOnScreen[b].theAngle > leftFov) {
+                        console.log("Right")
+
+                        adScript[b] += "On the Right, ";
+
+                    }
+                    console.log("5")
+
 
                     //Distance
 
