@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Aidod Description test using three.js V.16 </title>
+    <title>Audio Description test using three.js V.16 </title>
     <style>
         body {
             margin: 0;
         }
 
-        ul{
+        ul {
             list-style: none
         }
 
@@ -18,9 +18,9 @@
             display: flex;
             justify-content: center;
 
-            border:0;
+            border: 0;
             padding: 0;
-            margin:0;
+            margin: 0;
 
             position: absolute;
             width: 100%;
@@ -34,7 +34,7 @@
 
             width: 100%;
             height: 100%;
-            
+
             font-family: Arial, Helvetica, sans-serif;
 
             color: #ffffff;
@@ -43,7 +43,8 @@
             text-shadow: 1px 1px #000;
 
         }
-        h1{
+
+        h1 {
             text-align: center;
         }
     </style>
@@ -70,7 +71,7 @@
                 <li> D to move Right</li>
 
                 <li>Press SPACE to create an audio description </li>
-        </ul>
+            </ul>
         </div>
     </div>
 
@@ -192,7 +193,7 @@
             var objectsZ = [];
             //Create a loop to create a random number of cubes, spheres and cones
 
-            var numToGen = Math.floor(Math.random() * 5) + 2;
+            var numToGen = Math.floor(Math.random() * 12) + 7;
             //test
             //var numToGen = 1;
 
@@ -616,11 +617,15 @@
 
                     console.log("objectsOnScreen[b].theAngle: " + objectsOnScreen[b].theAngle)
 
+                    roundedAngle = Math.round(objectsOnScreen[b].theAngle);
+                    roundedRotation = Math.round(cameraRotation)
+
                     //Creates a line about the angle/ direction of the object
                     if (objectsOnScreen[b].theAngle <= rightFov && objectsOnScreen[b].theAngle > upperMiddleFov) {
                         console.log("Left")
+                        newAngle = Math.abs(roundedRotation - roundedAngle)
 
-                        adScript[b] += "On the Left, ";
+                        adScript[b] += "On the Left , at an angle of " + newAngle;
                     } else if (objectsOnScreen[b].theAngle <= upperMiddleFov && objectsOnScreen[b].theAngle > lowerMiddleFov) {
                         console.log("Centre")
 
@@ -628,8 +633,9 @@
 
                     } else if (objectsOnScreen[b].theAngle <= lowerMiddleFov && objectsOnScreen[b].theAngle > leftFov) {
                         console.log("Right")
+                        newAngle = Math.abs(roundedAngle - roundedRotation)
 
-                        adScript[b] += "On the Right, ";
+                        adScript[b] += "On the Right, at an angle of " + newAngle;
 
                     }
                     console.log("5")
@@ -766,7 +772,17 @@
                 }
             }
             else {
-                adScript[0] = "You are standing in a room with black walls and a blue floor. You cannot see any objects."
+
+                h = randomInt(3);
+                if (h == 1) {
+                    adScript[0] = "You are standing in a room with black walls and a blue floor. You cannot see any objects."
+                } else if (h == 2) {
+                    adScript[0] = "There are no objects within your vision."
+                } else if (h == 3) {
+                    adScript[0] = "You cannot see anything."
+
+                }
+
             }
             return adScript
         }
