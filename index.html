@@ -625,7 +625,7 @@
                         console.log("Left")
                         newAngle = Math.abs(roundedRotation - roundedAngle)
 
-                        adScript[b] += "On the Left , at an angle of " + newAngle;
+                        adScript[b] += "On the Left , at an angle of " + newAngle + " degrees ";
                     } else if (objectsOnScreen[b].theAngle <= upperMiddleFov && objectsOnScreen[b].theAngle > lowerMiddleFov) {
                         console.log("Centre")
 
@@ -635,7 +635,7 @@
                         console.log("Right")
                         newAngle = Math.abs(roundedAngle - roundedRotation)
 
-                        adScript[b] += "On the Right, at an angle of " + newAngle;
+                        adScript[b] += "On the Right, at an angle of " + newAngle + " degrees ";
 
                     }
                     console.log("5")
