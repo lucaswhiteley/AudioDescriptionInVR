@@ -6,11 +6,27 @@
     <title>Audio Description test using three.js V.16 </title>
     <style>
         body {
+
+            /* Any browser which supports CSS3 */
+            filter: blur(10px);
+
+            /* Firefox version 34 and earlier */
+            filter: url("blur.svg#gaussian_blur");
+
+            /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
+            -webkit-filter: blur(10px);
+        }
+
+        body {
             margin: 0;
+
+
+
         }
 
         ul {
             list-style: none
+            
         }
 
         /* CSS for the menu and instructions */
@@ -28,6 +44,15 @@
 
             /*Removes the cursos/makes the text unselectable*/
             user-select: none;
+            /* Any browser which supports CSS3 */
+            filter: blur(0px);
+
+            /* Firefox version 34 and earlier */
+            filter: url("blur.svg#gaussian_blur");
+
+            /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
+            -webkit-filter: blur(0px);
+
         }
 
         #instructions {
@@ -42,6 +67,17 @@
 
             text-shadow: 1px 1px #000;
 
+            /*Removes the cursos/makes the text unselectable*/
+            user-select: none;
+
+            /* Any browser which supports CSS3 */
+            filter: blur(0px);
+
+            /* Firefox version 34 and earlier */
+            filter: url("blur.svg#gaussian_blur");
+
+            /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
+            -webkit-filter: blur(0px);
         }
 
         h1 {
@@ -141,7 +177,7 @@
 
             //REMOVED RENDERER FOR TESTS
             //Renders the scene          
-            //renderer.render(scene, camera);
+            renderer.render(scene, camera);
         }
 
         //Initialises the scene and other essential things before the program runs
