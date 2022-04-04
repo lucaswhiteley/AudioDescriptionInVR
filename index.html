@@ -5,98 +5,13 @@
     <meta charset="utf-8">
     <title>Audio Description test using three.js V.16 </title>
     <style>
-        body {
-
-            /* Any browser which supports CSS3 */
-            filter: blur(10px);
-
-            /* Firefox version 34 and earlier */
-            filter: url("blur.svg#gaussian_blur");
-
-            /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
-            -webkit-filter: blur(10px);
-        }
-
-        body {
-            margin: 0;
-
-
-
-        }
-
-        ul {
-            list-style: none
-            
-        }
-
-        /* CSS for the menu and instructions */
-        #menu {
-            display: flex;
-            justify-content: center;
-
-            border: 0;
-            padding: 0;
-            margin: 0;
-
-            position: absolute;
-            width: 100%;
-            height: 100%;
-
-            /*Removes the cursos/makes the text unselectable*/
-            user-select: none;
-            /* Any browser which supports CSS3 */
-            filter: blur(0px);
-
-            /* Firefox version 34 and earlier */
-            filter: url("blur.svg#gaussian_blur");
-
-            /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
-            -webkit-filter: blur(0px);
-
-        }
-
-        #instructions {
-
-            width: 100%;
-            height: 100%;
-
-            font-family: Arial, Helvetica, sans-serif;
-
-            color: #ffffff;
-            text-align: center;
-
-            text-shadow: 1px 1px #000;
-
-            /*Removes the cursos/makes the text unselectable*/
-            user-select: none;
-
-            /* Any browser which supports CSS3 */
-            filter: blur(0px);
-
-            /* Firefox version 34 and earlier */
-            filter: url("blur.svg#gaussian_blur");
-
-            /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
-            -webkit-filter: blur(0px);
-        }
-
-        h1 {
-            text-align: center;
-        }
+        
     </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!--First import the code for three.js and FirstPersonController from file-->
-    <script src="js/three.js"></script>
-    <script src="js/FirstPersonControls.js"></script>
-    <script src="js/webxr-polyfill.js"></script>
-
-    <!-- <script type="module" src="js/VRButton.js"></script> -->
-
-    <!-- The menu -->
-
-    <div id="menu">
+    <div class="menu" id="menu">
         <div id="instructions">
             <h1>Instructions</h1>
             <ul>
@@ -111,734 +26,739 @@
         </div>
     </div>
 
-    <script>
+    <!--First import the code for three.js and FirstPersonController from file-->
+    <script src="js/three.js"></script>
+    <script src="js/FirstPersonControls.js"></script>
+    <script src="js/webxr-polyfill.js"></script>
 
-        var polyfill = new WebXRPolyfill();
+    <!-- <script type="module" src="js/VRButton.js"></script> -->
 
-
-        //Creates some Three.js necessities
-        var renderer;
-        var scene;
-        var camera;
-
-        //Camera location
-        var cameraX;
-        var cameraY;
-        var cameraZ;
-
-        var objectsOnScreen = [];
-
-        //Array to store the Audiodescription Script
-        var adScript = [];
-        //The actual message that will be read out
-        var adMessage;
-
-        var clock = new THREE.Clock();
-
-        class ThreeDObject {
-            constructor(colour, shape, x, y, z, texture, distance, angle, position) {
-                this.colour = colour;
-                this.shape = shape;
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.theTexture = texture;
-                this.theDistance = -1;
-                this.theAngle = -1;
-                this.position = position;
+    <!-- The menu -->
 
 
-                //this.angle = -1;
+    <div class="mainContent">
+        <script>
+
+            var polyfill = new WebXRPolyfill();
+
+
+            //Creates some Three.js necessities
+            var renderer;
+            var scene;
+            var camera;
+
+            //Camera location
+            var cameraX;
+            var cameraY;
+            var cameraZ;
+
+            var objectsOnScreen = [];
+
+            //Array to store the Audiodescription Script
+            var adScript = [];
+            //The actual message that will be read out
+            var adMessage;
+
+            var clock = new THREE.Clock();
+
+            class ThreeDObject {
+                constructor(colour, shape, x, y, z, texture, distance, angle, position) {
+                    this.colour = colour;
+                    this.shape = shape;
+                    this.x = x;
+                    this.y = y;
+                    this.z = z;
+                    this.theTexture = texture;
+                    this.theDistance = -1;
+                    this.theAngle = -1;
+                    this.position = position;
+
+
+                    //this.angle = -1;
+                }
             }
-        }
 
-        var threeDObjectArray = [];
+            var threeDObjectArray = [];
 
-        //initialises the scene
-        init();
-        //populates the scene with objects
-        populate();
-        //animates the scene (primarily camera movement)
-        animate();
+            //initialises the scene
+            init();
+            //populates the scene with objects
+            populate();
+            //animates the scene (primarily camera movement)
+            animate();
 
-        //defines the animation of the scene and calls the renderer.
-        function animate() {
-            //IN PROGRESS
-            var delta = clock.getDelta();
+            //defines the animation of the scene and calls the renderer.
+            function animate() {
+                //IN PROGRESS
+                var delta = clock.getDelta();
 
-            fpcCamera.movementSpeed = 101
-            fpcCamera.update(delta);
+                fpcCamera.movementSpeed = 101
+                fpcCamera.update(delta);
 
-            //TEST webxr
-            //requestAnimationFrame(animate);
-            renderer.setAnimationLoop(animate)
-            //renderer.xr.enabled = true;
-
-
-            //REMOVED RENDERER FOR TESTS
-            //Renders the scene          
-            renderer.render(scene, camera);
-        }
-
-        //Initialises the scene and other essential things before the program runs
-        function init() {
-
-            //setupVR();
-
-            //initialises the renderer and sets it to the size of the window
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement)
-
-            console.log("window.innerWidth = " + window.innerWidth);
-            console.log("window.innerHeight = " + window.innerHeight);
+                //TEST webxr
+                //requestAnimationFrame(animate);
+                renderer.setAnimationLoop(animate)
+                //renderer.xr.enabled = true;
 
 
-            //Initialises the scene
-            scene = new THREE.Scene();
+                //REMOVED RENDERER FOR TESTS
+                //Renders the scene          
+                renderer.render(scene, camera);
+            }
 
-            //Initialises the camera
-            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-            camera.position.set(40, 40, 400);
-            camera.lookAt(0, 40, 400);
-            scene.add(camera);
+            //Initialises the scene and other essential things before the program runs
+            function init() {
 
-            cameraX = 0;
+                //setupVR();
 
-            fpcCamera = new THREE.FirstPersonControls(camera, document.body);
+                //initialises the renderer and sets it to the size of the window
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement)
 
-            var gloorGeometry = new THREE.PlaneGeometry(window.innerWidth * 2, window.innerHeight * 2, 1, 1);
-            var floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-            var floor = new THREE.Mesh(gloorGeometry, floorMaterial);
-            //This line renders both sides of the plane
-            floor.material.side = THREE.DoubleSide;
-            floor.rotation.x = (-Math.PI / 2);
-            floor.position.y = 0;
-            floor.position.x = 0;
-            floor.position.z = 0;
-
-            scene.add(floor);
+                console.log("window.innerWidth = " + window.innerWidth);
+                console.log("window.innerHeight = " + window.innerHeight);
 
 
-        }
+                //Initialises the scene
+                scene = new THREE.Scene();
 
-        //populates the scene with all of the objects
-        function populate() {
-            //Arrays to store the positions of the objects
-            var objectsX = [];
-            var objectsZ = [];
-            //Create a loop to create a random number of cubes, spheres and cones
+                //Initialises the camera
+                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+                camera.position.set(40, 40, 400);
+                camera.lookAt(0, 40, 400);
+                scene.add(camera);
 
-            var numToGen = Math.floor(Math.random() * 12) + 7;
-            //test
-            //var numToGen = 1;
+                cameraX = 0;
 
-            //generates between 2 and 5 cubes
-            for (let i = 0; i < numToGen; i++) {
+                fpcCamera = new THREE.FirstPersonControls(camera, document.body);
+
+                var gloorGeometry = new THREE.PlaneGeometry(window.innerWidth * 2, window.innerHeight * 2, 1, 1);
+                var floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+                var floor = new THREE.Mesh(gloorGeometry, floorMaterial);
+                //This line renders both sides of the plane
+                floor.material.side = THREE.DoubleSide;
+                floor.rotation.x = (-Math.PI / 2);
+                floor.position.y = 0;
+                floor.position.x = 0;
+                floor.position.z = 0;
+
+                scene.add(floor);
 
 
-                ///Choosing the shape of the object
-                let z = Math.floor(Math.random() * 3) + 1;
-                switch (z) {
-                    case 1:
-                        //Box
-                        objectShape = "Box";
-                        geometry = new THREE.BoxGeometry(100, 100, 100)
-                        break;
-                    case 2:
-                        //Sphere 
-                        objectShape = "Sphere";
-                        geometry = new THREE.SphereGeometry(60)
-                        break;
-                    case 3:
-                        //Cone
-                        objectShape = "Cone";
-                        geometry = new THREE.ConeGeometry(50, 100)
-                        break;
-                    case 4:
-                        //Painting of the Mona Lisa
-                        objectShape = "Painting"
-                        geometry = new THREE.BoxGeometry(100, 100, 10)
-                }
+            }
 
-                //choosing the colour of the object
-                let x = Math.floor(Math.random() * 3) + 1;
-                switch (x) {
-                    case 1:
-                        //red
-                        objectColour = "red";
-                        material = new THREE.MeshBasicMaterial({ color: 0xff1100 });
-                        break;
-                    case 2:
-                        //Spring Green
-                        objectColour = "Spring Green";
-                        material = new THREE.MeshBasicMaterial({ color: 0x00ff59 });
-                        break;
-                    case 3:
-                        //Purple Pizzazz
-                        objectColour = "Purple Pizzazz";
-                        material = new THREE.MeshBasicMaterial({ color: 0xff00e1 });
-                        break;
-                    default:
-                        objectColour = null;
+            //populates the scene with all of the objects
+            function populate() {
+                //Arrays to store the positions of the objects
+                var objectsX = [];
+                var objectsZ = [];
+                //Create a loop to create a random number of cubes, spheres and cones
 
-                }
+                var numToGen = Math.floor(Math.random() * 12) + 7;
+                //test
+                //var numToGen = 1;
 
-                //if the object is a box then 
-                if (objectShape == "Box") {
-                    //choosing the texture of the object
-                    let y = Math.floor(Math.random() * 3) + 1;
-                    switch (y) {
+                //generates between 2 and 5 cubes
+                for (let i = 0; i < numToGen; i++) {
+
+
+                    ///Choosing the shape of the object
+                    let z = Math.floor(Math.random() * 3) + 1;
+                    switch (z) {
                         case 1:
-                            //Mona Lisa Painting
-                            objectTexture = "Mona Lisa"
-                            material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('MonaLisa.jpg'), side: THREE.DoubleSide });
-                            console.log("ObjectTexture: " + objectTexture);
-
+                            //Box
+                            objectShape = "Box";
+                            geometry = new THREE.BoxGeometry(100, 100, 100)
                             break;
                         case 2:
-                            //The Scream Painting
-                            objectTexture = "The Scream"
-                            material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('TheScream.jpg'), side: THREE.DoubleSide });
-                            console.log("ObjectTexture: " + objectTexture);
-
+                            //Sphere 
+                            objectShape = "Sphere";
+                            geometry = new THREE.SphereGeometry(60)
                             break;
                         case 3:
-                            //The Scream Painting
-                            objectTexture = "Starry Night"
-                            material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('StarryNight.jpg'), side: THREE.DoubleSide });
-                            console.log("ObjectTexture: " + objectTexture);
+                            //Cone
+                            objectShape = "Cone";
+                            geometry = new THREE.ConeGeometry(50, 100)
+                            break;
+                        case 4:
+                            //Painting of the Mona Lisa
+                            objectShape = "Painting"
+                            geometry = new THREE.BoxGeometry(100, 100, 10)
+                    }
 
+                    //choosing the colour of the object
+                    let x = Math.floor(Math.random() * 3) + 1;
+                    switch (x) {
+                        case 1:
+                            //red
+                            objectColour = "red";
+                            material = new THREE.MeshBasicMaterial({ color: 0xff1100 });
+                            break;
+                        case 2:
+                            //Spring Green
+                            objectColour = "Spring Green";
+                            material = new THREE.MeshBasicMaterial({ color: 0x00ff59 });
+                            break;
+                        case 3:
+                            //Purple Pizzazz
+                            objectColour = "Purple Pizzazz";
+                            material = new THREE.MeshBasicMaterial({ color: 0xff00e1 });
                             break;
                         default:
-                            objectTexture = null;
-                    }
-                } else {
-                    objectTexture = null;
-                }
+                            objectColour = null;
 
-                mesh = new THREE.Mesh(geometry, material)
-                //since 0 is the middle of the plane, the position could be negative too
-                mesh.position.x = Math.floor(Math.random() * 1850) - 900;
-                mesh.position.y = 50;
-
-                //loops through the x array to see if there are any overlaps
-                for (let j = 0; j < objectsX.length; j++) {
-                    console.log("objectsX.length: " + objectsX.length);
-
-                    if (objectsX[j] - 200 <= mesh.position.x <= objectsX[j] + 200) {
-                        mesh.position.x = Math.floor(Math.random() * 800) - 400;
-                        //console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)
-                    }
-                }
-
-                //adds the x position of the object to the Array
-                objectsX[i] = mesh.position.x;
-                mesh.position.z = Math.floor(Math.random() * 810) - 405;
-
-                //loops through the Z array to see if there are any overlaps
-                for (let k = 0; k < objectsZ.length; k++) {
-                    console.log(objectsZ.length);
-
-                    if (objectsZ[k] - 200 <= mesh.position.z <= objectsZ[k] + 200) {
-                        mesh.position.z = Math.floor(Math.random() * 800) - 400;
-                        //console.log("Z OVERLAP, ORIG:" + objectsZ[k] + "NEW: " + mesh.position.z)
                     }
 
-                }
-
-                //adds the y position of the object to the Array
-                objectsZ[i] = mesh.position.z;
-
-                //debug
-                console.log("ObjectsX: " + objectsX)
-                console.log("ObjectsZ: " + objectsZ)
-
-                //creating the object and adding to the array
-                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position);
-                threeDObjectArray[i] = newObject;
-                console.log(threeDObjectArray[i]);
-                console.log(threeDObjectArray.length);
-
-                scene.add(mesh);
-            }
-
-        }
-
-        //Working on getting the location of the camera with a button press
-        window.addEventListener("keydown", onKeyDown, false);
-
-        function onKeyDown(e) {
-            if (e.keyCode == "32") {
-
-                //console.log("Camera Vitals: ")
-
-                //console.log("Camera X Position = " + camera.position.x)
-                //console.log("Camera Y Position = " + camera.position.y)
-                //console.log("Camera Z Position = " + camera.position.z)
-                //console.log("Camera Quaternian X = " + camera.quaternion.x)
-                // camera.quaternion.y Returns the rotation of the camera in rad
-                // console.log("Camera Quaternian Y = " + camera.quaternion.y)
-
-
-                console.log("Camera FOV = " + camera.fov)
-
-                //getCameraDirection();
-
-                theDistances = workOutDistance2();
-                console.log("Distances = " + theDistances)
-                objectArrayToString();
-
-                theAngles = workOutAngles();
-                console.log("Angles (Deg) = " + theAngles)
-
-                getCameraRotation()
-
-                //what objects are on screen?
-                //isObjectOnScreen(threeDObjectArray[0]);
-
-
-                console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle)
-                // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
-
-                //console.log("Camera Angle DEG = " + getVectorAngle() * (180 / Math.PI))
-                console.log("Camera Angle DEG = " + getVectorAngle())
-
-
-                //CALLS for the creation of the Audio Description
-                createAD()
-                console.log(adScript)
-                //turns it into a message 
-                adMessage = "";
-                adScriptToMessage()
-                console.log("Message: " + adMessage)
-
-                //reads the messasge outloud
-                readAD()
-
-                //whatObjectsAreOnScreen();
-
-
-
-                //GETS THE CAMERA QUATERNION
-                //getCameraQuaternion()
-
-                //Debug information for the "undefined" objects
-                for (let c = 0; c < adScript.length; c++) {
-                    if (adScript[c].includes(undefined)) {
-                        console.log("Undefined Name: " + adScript[c]);
-                        console.log("Undefined Shape?: " + threeDObjectArray[c].shape);
-                        console.log("Undefined Colour?: " + threeDObjectArray[c].color);
-                        console.log("Undefined Texture?: " + threeDObjectArray[c].texture);
-                        console.log("Undefined x?: " + threeDObjectArray[c].x);
-                        console.log("Undefined y?: " + threeDObjectArray[c].y);
-                        console.log("Undefined z?: " + threeDObjectArray[c].z);
-                        console.log("Undefined Angle?: " + threeDObjectArray[c].theAngle);
-                        console.log("Undefined Distance?: " + threeDObjectArray[c].theDistance);
-                    }
-                }
-
-            }
-
-        }
-
-        //Converts the 3d object array into strings
-        function objectArrayToString() {
-            for (let a = 0; a < threeDObjectArray.length; a++) {
-
-                console.log("Colour: " + threeDObjectArray[a].colour + " & Shape: " + threeDObjectArray[a].shape + " & Texture: " + threeDObjectArray[a].theTexture)
-
-            }
-        }
-
-        //creates an array of the distances of objects to the camera
-        function workOutDistance() {
-            let distances = [];
-            for (let a = 0; a < threeDObjectArray.length; a++) {
-                //distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
-                distances[a] = distanceWithoutY(threeDObjectArray[a].x, threeDObjectArray[a].z);
-                threeDObjectArray[a].theDistance = distances[a];
-            }
-
-            return distances;
-        }
-
-        //TEST
-        function workOutDistance2() {
-
-            //whatObjectsAreOnScreen()
-            let distances = [];
-            for (let a = 0; a < objectsOnScreen.length; a++) {
-                //distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
-                distances[a] = distanceWithoutY(objectsOnScreen[a].x, objectsOnScreen[a].z);
-                objectsOnScreen[a].theDistance = distances[a];
-            }
-
-            return distances;
-        }
-
-        //calculates the distance between an object and the camera using the X,and Z coordinates as Y is the same between each
-
-        function distanceWithoutY(x, z) {
-            let distanceToCamera = Math.sqrt(Math.pow((x - camera.position.x), 2) + Math.pow((z - camera.position.z), 2));
-            return distanceToCamera;
-
-        }
-
-        //calculates the distance between an object and the camera using the X,Y, AND Z coordinates
-        function distance(x, y, z) {
-            //finds the distance between an object and the camera using Pythagoras theorem
-            let distanceToCamera = Math.sqrt(Math.pow((camera.position.x - x), 2) + Math.pow((camera.position.y - y), 2) + Math.pow((camera.position.z - z), 2));
-            return distanceToCamera;
-        }
-
-        //creates an array of the angles of objects to the camera
-        function workOutAngles() {
-            //array of all the angles
-            let angles = [];
-
-            //loops through the objects array and works out the angle for each
-            for (let a = 0; a < threeDObjectArray.length; a++) {
-
-                //Works out the angle and converts it to degrees
-                angles[a] = THREE.Math.radToDeg(getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z));
-
-                console.log(threeDObjectArray[a].shape + threeDObjectArray[a].theDistance + threeDObjectArray[a].theTexture);
-
-                console.log("angle before adding camera rotation " + angles[a])
-
-                //sets the object's angle to the worked out angle
-                threeDObjectArray[a].theAngle = angles[a];
-
-                console.log("The Objects Angle: " + threeDObjectArray[a].theAngle)
-
-
-            }
-            return angles;
-        }
-
-        //works out the angle of an object and the camera
-        function getAngle(x, z) {
-            //formula for angle between = atan2
-            angleToCamera = Math.atan2(-(camera.position.x - x), -(camera.position.z - z));
-            return angleToCamera
-        }
-
-        //returns the angle the camera is rotated
-        function getVectorAngle() {
-
-            var vector = new THREE.Vector3();
-            //gets the rotation vector of the camera
-            camera.getWorldDirection(vector);
-            //Converts the vector to an angle in degrees
-            angle = THREE.Math.radToDeg(Math.atan2(vector.x, vector.z));
-            console.log("CAMERA ANGLE: " + angle)
-
-            return angle
-        }
-
-        //Function works out how many degrees the camera has rotated
-        //Seems to be working fine? Not sure why max is around 280 and min is around -80
-        function getCameraRotation() {
-            //Camera starts out at 90
-            //So I offset by 90 to make the angle 0
-            //initialCameraAngle = 90;
-            cameraAngle = getVectorAngle()
-            currentRotation = cameraAngle  //- initialCameraAngle
-            console.log("Current Camera Rotation: " + currentRotation)
-
-            return currentRotation
-        }
-
-        //checks if the angle of the object is within the angles the field of view of the camera
-        function isObjectOnScreen(object) {
-            fov = camera.fov
-            lowfov = -(fov / 2)
-            highfov = (fov / 2)
-
-            cameraRotation = getCameraRotation()
-            lowCamera = cameraRotation + lowfov
-            highCamera = cameraRotation + highfov
-
-            console.log("Fov: " + fov + " Camera Rotation:" + cameraRotation)
-
-            objectAngle = object.theAngle;
-
-            if (objectAngle > lowCamera && objectAngle < highCamera) {
-                console.log("------ YES -------")
-                console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
-
-                return true
-            } else {
-                console.log("------ NO -------")
-                console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
-                return false
-            }
-        }
-
-        //loops through the array of objects and creates a new array with only the objects on screen
-        function whatObjectsAreOnScreen() {
-
-            //TEST
-
-
-            objectsOnScreen.length = 0;
-
-            if (threeDObjectArray.length != 0) {
-                //loops through the array
-                for (let f = 0; f < threeDObjectArray.length; f++) {
-
-                    if (isObjectOnScreen(threeDObjectArray[f])) {
-                        //NEW
-                        objectsOnScreen.push(threeDObjectArray[f]);
-
-                    }
-                }
-            }
-
-            workOutDistance2();
-
-            console.log("OBJECTS ON SCREEN: " + JSON.stringify(objectsOnScreen));
-
-            //prints out the objects
-            for (let g = 0; g < threeDObjectArray.length; g++) {
-                console.log(objectsOnScreen[g])
-            }
-
-        }
-
-        //converts Radians to degrees
-        function convertRadDeg(rad) {
-            var pi = Math.pi
-            deg = rad * (180 / pi)
-            return deg
-        }
-
-        //generates a random integer
-        function randomInt(max) {
-            return Math.floor(Math.random() * max + 1);
-        }
-
-        //Creates the array of Audio Desctiption
-        function createAD() {
-
-
-            //Clears the previous AD
-            adScript.length = 0;
-
-            //checks to see what objects are on screen
-            whatObjectsAreOnScreen()
-
-            if (objectsOnScreen.length != 0) {
-
-
-                //loops through the array and creates a line for each part.
-                for (let b = 0; b < objectsOnScreen.length; b++) {
-
-                    //Uses the camera's FOV to decide which direction the ad is facing.
-                    fov = camera.fov;
-                    //Not tested yet 
-                    cameraRotation = getCameraRotation()
-
-                    upperMiddleFov = cameraRotation + (fov / 2) - (fov / 3)
-                    lowerMiddleFov = cameraRotation - (fov / 2) + (fov / 3)
-                    rightFov = cameraRotation + fov / 2
-                    leftFov = cameraRotation - (fov / 2)
-
-                    //Testing the FOV calculations
-                    console.log("Fov = " + fov + " upperMiddleFov = " + upperMiddleFov + " lowerMiddleFov = " + lowerMiddleFov + " rightFov = " + rightFov + " leftFov" + leftFov)
-
-                    adScript[b] = "";
-                    console.log("1")
-
-                    console.log("objectsOnScreen[b].theAngle: " + objectsOnScreen[b].theAngle)
-
-                    roundedAngle = Math.round(objectsOnScreen[b].theAngle);
-                    roundedRotation = Math.round(cameraRotation)
-
-                    //Creates a line about the angle/ direction of the object
-                    if (objectsOnScreen[b].theAngle <= rightFov && objectsOnScreen[b].theAngle > upperMiddleFov) {
-                        console.log("Left")
-                        newAngle = Math.abs(roundedRotation - roundedAngle)
-
-                        adScript[b] += "On the Left , at an angle of " + newAngle + " degrees ";
-                    } else if (objectsOnScreen[b].theAngle <= upperMiddleFov && objectsOnScreen[b].theAngle > lowerMiddleFov) {
-                        console.log("Centre")
-
-                        adScript[b] += "In the centre, ";
-
-                    } else if (objectsOnScreen[b].theAngle <= lowerMiddleFov && objectsOnScreen[b].theAngle > leftFov) {
-                        console.log("Right")
-                        newAngle = Math.abs(roundedAngle - roundedRotation)
-
-                        adScript[b] += "On the Right, at an angle of " + newAngle + " degrees ";
-
-                    }
-                    console.log("5")
-
-
-                    //Distance
-
-                    if (objectsOnScreen[b].theDistance == undefined) {
-
-                        //For Debugging
-                        console.log("Camera Vitals: ")
-                        console.log("Camera X Position = " + camera.position.x)
-                        console.log("Camera Y Position = " + camera.position.y)
-                        console.log("Camera Z Position = " + camera.position.z)
-
-                        //Object vitals
-                        console.log("Object Vitals: ")
-                        console.log("X: " + objectsOnScreen[b].x)
-                        console.log("Y: " + objectsOnScreen[b].y)
-                        console.log("The Angle:  " + objectsOnScreen[b].theAngle)
-                        console.log("Distance: " + objectsOnScreen[b].theDistance)
-
-
+                    //if the object is a box then 
+                    if (objectShape == "Box") {
+                        //choosing the texture of the object
+                        let y = Math.floor(Math.random() * 3) + 1;
+                        switch (y) {
+                            case 1:
+                                //Mona Lisa Painting
+                                objectTexture = "Mona Lisa"
+                                material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('MonaLisa.jpg'), side: THREE.DoubleSide });
+                                console.log("ObjectTexture: " + objectTexture);
+
+                                break;
+                            case 2:
+                                //The Scream Painting
+                                objectTexture = "The Scream"
+                                material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('TheScream.jpg'), side: THREE.DoubleSide });
+                                console.log("ObjectTexture: " + objectTexture);
+
+                                break;
+                            case 3:
+                                //The Scream Painting
+                                objectTexture = "Starry Night"
+                                material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('StarryNight.jpg'), side: THREE.DoubleSide });
+                                console.log("ObjectTexture: " + objectTexture);
+
+                                break;
+                            default:
+                                objectTexture = null;
+                        }
                     } else {
+                        objectTexture = null;
+                    }
 
-                        if (objectsOnScreen[b].theDistance <= 200) {
-                            a = randomInt(3);
-                            if (a == 1) {
-                                adScript[b] += "Very close up there is a ";
-                            } else if (a == 2) {
-                                adScript[b] += "Within reach there is a ";
-                            } else if (a == 3) {
-                                adScript[b] += "Directly in front of you there is a ";
-                            }
+                    mesh = new THREE.Mesh(geometry, material)
+                    //since 0 is the middle of the plane, the position could be negative too
+                    mesh.position.x = Math.floor(Math.random() * 1850) - 900;
+                    mesh.position.y = 50;
 
-                        } else if (objectsOnScreen[b].theDistance <= 600) {
-                            c = randomInt(2);
-                            if (c == 1) {
-                                adScript[b] += "At a medium distance there is a ";
-                            } else if (c == 2) {
-                                adScript[b] += "Not too far away there is a ";
-                            }
+                    //loops through the x array to see if there are any overlaps
+                    for (let j = 0; j < objectsX.length; j++) {
+                        console.log("objectsX.length: " + objectsX.length);
 
-                            //} else if (threeDObjectArray[b].theDistance < 950) {
-                            //adScript[b] = "In the far distance, you can see a ";
-                        } else {
-                            e = randomInt(2);
-                            if (e == 1) {
-                                adScript[b] += "In the distance, You can faintly see a ";
-                            } else if (e == 2) {
-                                adScript[b] += "Beyond the horizon there is a ";
-
-                            }
+                        if (objectsX[j] - 200 <= mesh.position.x <= objectsX[j] + 200) {
+                            mesh.position.x = Math.floor(Math.random() * 800) - 400;
+                            //console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)
                         }
                     }
 
+                    //adds the x position of the object to the Array
+                    objectsX[i] = mesh.position.x;
+                    mesh.position.z = Math.floor(Math.random() * 810) - 405;
 
-                    //Loops through and adds the Colour
-                    if (objectsOnScreen[b].theTexture == null) {
-                        switch (objectsOnScreen[b].colour) {
-                            case "red":
-                                adScript[b] += "red"
+                    //loops through the Z array to see if there are any overlaps
+                    for (let k = 0; k < objectsZ.length; k++) {
+                        console.log(objectsZ.length);
+
+                        if (objectsZ[k] - 200 <= mesh.position.z <= objectsZ[k] + 200) {
+                            mesh.position.z = Math.floor(Math.random() * 800) - 400;
+                            //console.log("Z OVERLAP, ORIG:" + objectsZ[k] + "NEW: " + mesh.position.z)
+                        }
+
+                    }
+
+                    //adds the y position of the object to the Array
+                    objectsZ[i] = mesh.position.z;
+
+                    //debug
+                    console.log("ObjectsX: " + objectsX)
+                    console.log("ObjectsZ: " + objectsZ)
+
+                    //creating the object and adding to the array
+                    let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position);
+                    threeDObjectArray[i] = newObject;
+                    console.log(threeDObjectArray[i]);
+                    console.log(threeDObjectArray.length);
+
+                    scene.add(mesh);
+                }
+
+            }
+
+            //Working on getting the location of the camera with a button press
+            window.addEventListener("keydown", onKeyDown, false);
+
+            function onKeyDown(e) {
+                if (e.keyCode == "32") {
+
+                    //console.log("Camera Vitals: ")
+
+                    //console.log("Camera X Position = " + camera.position.x)
+                    //console.log("Camera Y Position = " + camera.position.y)
+                    //console.log("Camera Z Position = " + camera.position.z)
+                    //console.log("Camera Quaternian X = " + camera.quaternion.x)
+                    // camera.quaternion.y Returns the rotation of the camera in rad
+                    // console.log("Camera Quaternian Y = " + camera.quaternion.y)
+
+
+                    console.log("Camera FOV = " + camera.fov)
+
+                    //getCameraDirection();
+
+                    theDistances = workOutDistance2();
+                    console.log("Distances = " + theDistances)
+                    objectArrayToString();
+
+                    theAngles = workOutAngles();
+                    console.log("Angles (Deg) = " + theAngles)
+
+                    getCameraRotation()
+
+                    //what objects are on screen?
+                    //isObjectOnScreen(threeDObjectArray[0]);
+
+
+                    console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle)
+                    // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
+
+                    //console.log("Camera Angle DEG = " + getVectorAngle() * (180 / Math.PI))
+                    console.log("Camera Angle DEG = " + getVectorAngle())
+
+
+                    //CALLS for the creation of the Audio Description
+                    createAD()
+                    console.log(adScript)
+                    //turns it into a message 
+                    adMessage = "";
+                    adScriptToMessage()
+                    console.log("Message: " + adMessage)
+
+                    //reads the messasge outloud
+                    readAD()
+
+                    //whatObjectsAreOnScreen();
+
+
+                    //Debug information for the "undefined" objects
+                    for (let c = 0; c < adScript.length; c++) {
+                        if (adScript[c].includes(undefined)) {
+                            console.log("Undefined Name: " + adScript[c]);
+                            console.log("Undefined Shape?: " + threeDObjectArray[c].shape);
+                            console.log("Undefined Colour?: " + threeDObjectArray[c].color);
+                            console.log("Undefined Texture?: " + threeDObjectArray[c].texture);
+                            console.log("Undefined x?: " + threeDObjectArray[c].x);
+                            console.log("Undefined y?: " + threeDObjectArray[c].y);
+                            console.log("Undefined z?: " + threeDObjectArray[c].z);
+                            console.log("Undefined Angle?: " + threeDObjectArray[c].theAngle);
+                            console.log("Undefined Distance?: " + threeDObjectArray[c].theDistance);
+                        }
+                    }
+
+                }
+
+            }
+
+            //Converts the 3d object array into strings
+            function objectArrayToString() {
+                for (let a = 0; a < threeDObjectArray.length; a++) {
+
+                    console.log("Colour: " + threeDObjectArray[a].colour + " & Shape: " + threeDObjectArray[a].shape + " & Texture: " + threeDObjectArray[a].theTexture)
+
+                }
+            }
+
+            //creates an array of the distances of objects to the camera
+            function workOutDistance() {
+                let distances = [];
+                for (let a = 0; a < threeDObjectArray.length; a++) {
+                    //distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
+                    distances[a] = distanceWithoutY(threeDObjectArray[a].x, threeDObjectArray[a].z);
+                    threeDObjectArray[a].theDistance = distances[a];
+                }
+
+                return distances;
+            }
+
+            //TEST
+            function workOutDistance2() {
+
+                //whatObjectsAreOnScreen()
+                let distances = [];
+                for (let a = 0; a < objectsOnScreen.length; a++) {
+                    //distances[a] = distance(threeDObjectArray[a].x, threeDObjectArray[a]. y,threeDObjectArray[a].z);
+                    distances[a] = distanceWithoutY(objectsOnScreen[a].x, objectsOnScreen[a].z);
+                    objectsOnScreen[a].theDistance = distances[a];
+                }
+
+                return distances;
+            }
+
+            //calculates the distance between an object and the camera using the X,and Z coordinates as Y is the same between each
+
+            function distanceWithoutY(x, z) {
+                let distanceToCamera = Math.sqrt(Math.pow((x - camera.position.x), 2) + Math.pow((z - camera.position.z), 2));
+                return distanceToCamera;
+
+            }
+
+            //calculates the distance between an object and the camera using the X,Y, AND Z coordinates
+            function distance(x, y, z) {
+                //finds the distance between an object and the camera using Pythagoras theorem
+                let distanceToCamera = Math.sqrt(Math.pow((camera.position.x - x), 2) + Math.pow((camera.position.y - y), 2) + Math.pow((camera.position.z - z), 2));
+                return distanceToCamera;
+            }
+
+            //creates an array of the angles of objects to the camera
+            function workOutAngles() {
+                //array of all the angles
+                let angles = [];
+
+                //loops through the objects array and works out the angle for each
+                for (let a = 0; a < threeDObjectArray.length; a++) {
+
+                    //Works out the angle and converts it to degrees
+                    angles[a] = THREE.Math.radToDeg(getAngle(threeDObjectArray[a].x, threeDObjectArray[a].z));
+
+                    console.log(threeDObjectArray[a].shape + threeDObjectArray[a].theDistance + threeDObjectArray[a].theTexture);
+
+                    console.log("angle before adding camera rotation " + angles[a])
+
+                    //sets the object's angle to the worked out angle
+                    threeDObjectArray[a].theAngle = angles[a];
+
+                    console.log("The Objects Angle: " + threeDObjectArray[a].theAngle)
+
+
+                }
+                return angles;
+            }
+
+            //works out the angle of an object and the camera
+            function getAngle(x, z) {
+                //formula for angle between = atan2
+                angleToCamera = Math.atan2(-(camera.position.x - x), -(camera.position.z - z));
+                return angleToCamera
+            }
+
+            //returns the angle the camera is rotated
+            function getVectorAngle() {
+
+                var vector = new THREE.Vector3();
+                //gets the rotation vector of the camera
+                camera.getWorldDirection(vector);
+                //Converts the vector to an angle in degrees
+                angle = THREE.Math.radToDeg(Math.atan2(vector.x, vector.z));
+                console.log("CAMERA ANGLE: " + angle)
+
+                return angle
+            }
+
+            //Function works out how many degrees the camera has rotated
+            //Seems to be working fine? Not sure why max is around 280 and min is around -80
+            function getCameraRotation() {
+                //Camera starts out at 90
+                //So I offset by 90 to make the angle 0
+                //initialCameraAngle = 90;
+                cameraAngle = getVectorAngle()
+                currentRotation = cameraAngle  //- initialCameraAngle
+                console.log("Current Camera Rotation: " + currentRotation)
+
+                return currentRotation
+            }
+
+            //checks if the angle of the object is within the angles the field of view of the camera
+            function isObjectOnScreen(object) {
+                fov = camera.fov
+                lowfov = -(fov / 2)
+                highfov = (fov / 2)
+
+                cameraRotation = getCameraRotation()
+                lowCamera = cameraRotation + lowfov
+                highCamera = cameraRotation + highfov
+
+                console.log("Fov: " + fov + " Camera Rotation:" + cameraRotation)
+
+                objectAngle = object.theAngle;
+
+                if (objectAngle > lowCamera && objectAngle < highCamera) {
+                    console.log("------ YES -------")
+                    console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
+
+                    return true
+                } else {
+                    console.log("------ NO -------")
+                    console.log("Camera Rotation: " + cameraRotation + " Object Angle: " + object.theAngle)
+                    return false
+                }
+            }
+
+            //loops through the array of objects and creates a new array with only the objects on screen
+            function whatObjectsAreOnScreen() {
+
+                objectsOnScreen.length = 0;
+
+                if (threeDObjectArray.length != 0) {
+                    //loops through the array
+                    for (let f = 0; f < threeDObjectArray.length; f++) {
+
+                        if (isObjectOnScreen(threeDObjectArray[f])) {
+                            //NEW
+                            objectsOnScreen.push(threeDObjectArray[f]);
+
+                        }
+                    }
+                }
+
+                workOutDistance2();
+
+                console.log("OBJECTS ON SCREEN: " + JSON.stringify(objectsOnScreen));
+
+                //prints out the objects
+                for (let g = 0; g < threeDObjectArray.length; g++) {
+                    console.log(objectsOnScreen[g])
+                }
+
+            }
+
+            //converts Radians to degrees
+            function convertRadDeg(rad) {
+                var pi = Math.pi
+                deg = rad * (180 / pi)
+                return deg
+            }
+
+            //generates a random integer
+            function randomInt(max) {
+                return Math.floor(Math.random() * max + 1);
+            }
+
+            //Creates the array of Audio Desctiption
+            function createAD() {
+
+
+                //Clears the previous AD
+                adScript.length = 0;
+
+                //checks to see what objects are on screen
+                whatObjectsAreOnScreen()
+
+                if (objectsOnScreen.length != 0) {
+
+
+                    //loops through the array and creates a line for each part.
+                    for (let b = 0; b < objectsOnScreen.length; b++) {
+
+                        //Uses the camera's FOV to decide which direction the ad is facing.
+                        fov = camera.fov;
+                        //Not tested yet 
+                        cameraRotation = getCameraRotation()
+
+                        upperMiddleFov = cameraRotation + (fov / 2) - (fov / 3)
+                        lowerMiddleFov = cameraRotation - (fov / 2) + (fov / 3)
+                        rightFov = cameraRotation + fov / 2
+                        leftFov = cameraRotation - (fov / 2)
+
+                        //Testing the FOV calculations
+                        console.log("Fov = " + fov + " upperMiddleFov = " + upperMiddleFov + " lowerMiddleFov = " + lowerMiddleFov + " rightFov = " + rightFov + " leftFov" + leftFov)
+
+                        adScript[b] = "";
+                        console.log("1")
+
+                        console.log("objectsOnScreen[b].theAngle: " + objectsOnScreen[b].theAngle)
+
+                        roundedAngle = Math.round(objectsOnScreen[b].theAngle);
+                        roundedRotation = Math.round(cameraRotation)
+
+                        //Creates a line about the angle/ direction of the object
+                        if (objectsOnScreen[b].theAngle <= rightFov && objectsOnScreen[b].theAngle > upperMiddleFov) {
+                            console.log("Left")
+                            newAngle = Math.abs(roundedRotation - roundedAngle)
+
+                            adScript[b] += "On the Left , at an angle of " + newAngle + " degrees ";
+                        } else if (objectsOnScreen[b].theAngle <= upperMiddleFov && objectsOnScreen[b].theAngle > lowerMiddleFov) {
+                            console.log("Centre")
+
+                            adScript[b] += "In the centre, ";
+
+                        } else if (objectsOnScreen[b].theAngle <= lowerMiddleFov && objectsOnScreen[b].theAngle > leftFov) {
+                            console.log("Right")
+                            newAngle = Math.abs(roundedAngle - roundedRotation)
+
+                            adScript[b] += "On the Right, at an angle of " + newAngle + " degrees ";
+
+                        }
+                        console.log("5")
+
+
+                        //Distance
+
+                        if (objectsOnScreen[b].theDistance == undefined) {
+
+                            //For Debugging
+                            console.log("Camera Vitals: ")
+                            console.log("Camera X Position = " + camera.position.x)
+                            console.log("Camera Y Position = " + camera.position.y)
+                            console.log("Camera Z Position = " + camera.position.z)
+
+                            //Object vitals
+                            console.log("Object Vitals: ")
+                            console.log("X: " + objectsOnScreen[b].x)
+                            console.log("Y: " + objectsOnScreen[b].y)
+                            console.log("The Angle:  " + objectsOnScreen[b].theAngle)
+                            console.log("Distance: " + objectsOnScreen[b].theDistance)
+
+
+                        } else {
+
+                            if (objectsOnScreen[b].theDistance <= 200) {
+                                a = randomInt(3);
+                                if (a == 1) {
+                                    adScript[b] += "Very close up there is a ";
+                                } else if (a == 2) {
+                                    adScript[b] += "Within reach there is a ";
+                                } else if (a == 3) {
+                                    adScript[b] += "Directly in front of you there is a ";
+                                }
+
+                            } else if (objectsOnScreen[b].theDistance <= 600) {
+                                c = randomInt(2);
+                                if (c == 1) {
+                                    adScript[b] += "At a medium distance there is a ";
+                                } else if (c == 2) {
+                                    adScript[b] += "Not too far away there is a ";
+                                }
+
+                                //} else if (threeDObjectArray[b].theDistance < 950) {
+                                //adScript[b] = "In the far distance, you can see a ";
+                            } else {
+                                e = randomInt(2);
+                                if (e == 1) {
+                                    adScript[b] += "In the distance, You can faintly see a ";
+                                } else if (e == 2) {
+                                    adScript[b] += "Beyond the horizon there is a ";
+
+                                }
+                            }
+                        }
+
+
+                        //Loops through and adds the Colour
+                        if (objectsOnScreen[b].theTexture == null) {
+                            switch (objectsOnScreen[b].colour) {
+                                case "red":
+                                    adScript[b] += "red"
+                                    break;
+                                case "Spring Green":
+                                    adScript[b] += "green"
+                                    break;
+                                case "Purple Pizzazz":
+                                    adScript[b] += "purple"
+                                    break;
+                                case null:
+                                    adScript[b] += ""
+                                    break;
+                                default:
+                                    adScript[b] += ""
+                                    break;
+                            }
+                        }
+
+                        //Loops through and adds the shape
+                        switch (objectsOnScreen[b].shape) {
+                            case "Box":
+                                adScript[b] += " Box."
                                 break;
-                            case "Spring Green":
-                                adScript[b] += "green"
+                            case "Sphere":
+                                adScript[b] += " Sphere."
                                 break;
-                            case "Purple Pizzazz":
-                                adScript[b] += "purple"
-                                break;
-                            case null:
-                                adScript[b] += ""
+                            case "Cone":
+                                adScript[b] += " Cone."
                                 break;
                             default:
                                 adScript[b] += ""
                                 break;
                         }
+
+                        //Loops through and texture details if there is one
+                        //rework with switch(true)? 
+                        switch (objectsOnScreen[b].theTexture) {
+                            case "Mona Lisa":
+                                //Changes the description of the painting based on the distance
+                                if (objectsOnScreen[b].theDistance <= 300) {
+                                    adScript[b] += " On the box there is the famous painting the Mona Lisa by Leonardo Da Vinci."
+                                } else if (objectsOnScreen[b].theDistance <= 700) {
+                                    adScript[b] += " There is a painting of a woman in a black dress on the box."
+                                } else if (objectsOnScreen[b].theDistance < 950) {
+                                    adScript[b] += " There is a painting on the side of the box."
+                                }
+
+                                break;
+                            case "The Scream":
+                                //Changes the description of the painting based on the distance
+                                if (objectsOnScreen[b].theDistance <= 300) {
+                                    adScript[b] += " On the box there is the painting the Scream by Edvard Munch."
+                                } else if (objectsOnScreen[b].theDistance <= 700) {
+                                    adScript[b] += " There is a painting of a man in black stood by a river on the box."
+                                } else if (objectsOnScreen[b].theDistance < 950) {
+                                    adScript[b] += " There is a colourful painting on the side of the box."
+                                }
+                                break;
+                            case "Starry Night":
+                                //Changes the description of the painting based on the distance
+                                if (objectsOnScreen[b].theDistance <= 300) {
+                                    adScript[b] += " On the box there is the painting Starry Night by Vincent van Gogh."
+                                } else if (objectsOnScreen[b].theDistance <= 700) {
+                                    adScript[b] += " There is a colourful painting of a city skyline during night time on the box."
+                                } else if (objectsOnScreen[b].theDistance < 950) {
+                                    adScript[b] += " There is a colourful painting on the side of the box."
+                                }
+                                break;
+                            default:
+                                adScript[b] += ""
+                                break;
+                        }
+
                     }
+                }
+                else {
 
-                    //Loops through and adds the shape
-                    switch (objectsOnScreen[b].shape) {
-                        case "Box":
-                            adScript[b] += " Box."
-                            break;
-                        case "Sphere":
-                            adScript[b] += " Sphere."
-                            break;
-                        case "Cone":
-                            adScript[b] += " Cone."
-                            break;
-                        default:
-                            adScript[b] += ""
-                            break;
-                    }
+                    h = randomInt(3);
+                    if (h == 1) {
+                        adScript[0] = "You are standing in a room with black walls and a blue floor. You cannot see any objects."
+                    } else if (h == 2) {
+                        adScript[0] = "There are no objects within your vision."
+                    } else if (h == 3) {
+                        adScript[0] = "You cannot see anything."
 
-                    //Loops through and texture details if there is one
-                    //rework with switch(true)? 
-                    switch (objectsOnScreen[b].theTexture) {
-                        case "Mona Lisa":
-                            //Changes the description of the painting based on the distance
-                            if (objectsOnScreen[b].theDistance <= 300) {
-                                adScript[b] += " On the box there is the famous painting the Mona Lisa by Leonardo Da Vinci."
-                            } else if (objectsOnScreen[b].theDistance <= 700) {
-                                adScript[b] += " There is a painting of a woman in a black dress on the box."
-                            } else if (objectsOnScreen[b].theDistance < 950) {
-                                adScript[b] += " There is a painting on the side of the box."
-                            }
-
-                            break;
-                        case "The Scream":
-                            //Changes the description of the painting based on the distance
-                            if (objectsOnScreen[b].theDistance <= 300) {
-                                adScript[b] += " On the box there is the painting the Scream by Edvard Munch."
-                            } else if (objectsOnScreen[b].theDistance <= 700) {
-                                adScript[b] += " There is a painting of a man in black stood by a river on the box."
-                            } else if (objectsOnScreen[b].theDistance < 950) {
-                                adScript[b] += " There is a colourful painting on the side of the box."
-                            }
-                            break;
-                        case "Starry Night":
-                            //Changes the description of the painting based on the distance
-                            if (objectsOnScreen[b].theDistance <= 300) {
-                                adScript[b] += " On the box there is the painting Starry Night by Vincent van Gogh."
-                            } else if (objectsOnScreen[b].theDistance <= 700) {
-                                adScript[b] += " There is a colourful painting of a city skyline during night time on the box."
-                            } else if (objectsOnScreen[b].theDistance < 950) {
-                                adScript[b] += " There is a colourful painting on the side of the box."
-                            }
-                            break;
-                        default:
-                            adScript[b] += ""
-                            break;
                     }
 
                 }
+                return adScript
             }
-            else {
 
-                h = randomInt(3);
-                if (h == 1) {
-                    adScript[0] = "You are standing in a room with black walls and a blue floor. You cannot see any objects."
-                } else if (h == 2) {
-                    adScript[0] = "There are no objects within your vision."
-                } else if (h == 3) {
-                    adScript[0] = "You cannot see anything."
-
+            //Converts the array to a string
+            function adScriptToMessage() {
+                for (let c = 0; c < adScript.length; c++) {
+                    adMessage += adScript[c];
+                    adMessage += " ";
                 }
-
             }
-            return adScript
-        }
 
-        //Converts the array to a string
-        function adScriptToMessage() {
-            for (let c = 0; c < adScript.length; c++) {
-                adMessage += adScript[c];
-                adMessage += " ";
+            //reads out the Audio Description
+            function readAD() {
+                let utterance = new SpeechSynthesisUtterance();
+                utterance.text = adMessage;
+                window.speechSynthesis.speak(utterance);
             }
-        }
 
-        //reads out the Audio Description
-        function readAD() {
-            let utterance = new SpeechSynthesisUtterance();
-            utterance.text = adMessage;
-            window.speechSynthesis.speak(utterance);
-        }
-
-    </script>
+        </script>
+    </div>
 </body>
 
 </html>
