@@ -9,15 +9,9 @@ body {
     /* filter: url("blur.svg#gaussian_blur"); */
 
     /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
-    /* -webkit-filter: blur(10px);  */
+    /* -webkit-filter: blur(10px); */
 }
 
-#mainContent {
-    /* Any browser which supports CSS3 */
-    filter: blur(10px);
-    filter: url("blur.svg#gaussian_blur");
-    -webkit-filter: blur(10px);
-}
 
 ul {
     /*Removes the bullet points from the list*/
@@ -50,6 +44,7 @@ ul {
     /* Webkit in Chrome 52, Safari 9, Opera 39, and earlier */
     -webkit-filter: blur(0px);
 
+    z-index: 2;
 }
 
 #instructions {
