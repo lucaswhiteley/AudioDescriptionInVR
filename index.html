@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <title>Audio Description test using three.js V.16 </title>
     <style>
-        
+
     </style>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="menu" id="menu">
+<!--     <div class="menu" id="menu">
         <div id="instructions">
             <h1>Instructions</h1>
             <ul>
@@ -24,7 +24,7 @@
                 <li>Press SPACE to create an audio description </li>
             </ul>
         </div>
-    </div>
+    </div> -->
 
     <!--First import the code for three.js and FirstPersonController from file-->
     <script src="js/three.js"></script>
@@ -155,12 +155,35 @@
                 var objectsZ = [];
                 //Create a loop to create a random number of cubes, spheres and cones
 
-                var numToGen = Math.floor(Math.random() * 12) + 7;
+                var numToGen = Math.floor(Math.random() * 10) + 7;
                 //test
-                //var numToGen = 1;
+                //var numToGen = 2;
 
-                //generates between 2 and 5 cubes
-                for (let i = 0; i < numToGen; i++) {
+
+                //Adds object used in tests
+
+                geometry = new THREE.SphereGeometry(60)
+                material = new THREE.MeshBasicMaterial({ color: 0xFFD700 });
+
+                mesh = new THREE.Mesh(geometry, material)
+
+                mesh.position.x = 190;
+                mesh.position.y = 50;
+                mesh.position.z = -278;
+
+                scene.add(mesh);
+
+                objectColour = "Gold"
+                objectShape = "Sphere"
+                objectTexture = null
+
+                let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position);
+                //r = threeDObjectArray.length
+                threeDObjectArray[0] = newObject;
+
+
+                //generates the other shapes that are in the level
+                for (let i = 1; i < numToGen; i++) {
 
 
                     ///Choosing the shape of the object
@@ -252,7 +275,7 @@
                     for (let j = 0; j < objectsX.length; j++) {
                         console.log("objectsX.length: " + objectsX.length);
 
-                        if (objectsX[j] - 200 <= mesh.position.x <= objectsX[j] + 200) {
+                        if (objectsX[j] - 100 <= mesh.position.x <= objectsX[j] + 100) {
                             mesh.position.x = Math.floor(Math.random() * 800) - 400;
                             //console.log("X OVERLAP, ORIG:" + objectsX[j] + "NEW: " + mesh.position.x)
                         }
@@ -281,10 +304,9 @@
                     console.log("ObjectsZ: " + objectsZ)
 
                     //creating the object and adding to the array
-                    let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position);
-                    threeDObjectArray[i] = newObject;
-                    console.log(threeDObjectArray[i]);
-                    console.log(threeDObjectArray.length);
+                    let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position); threeDObjectArray[i] = newObject;
+                    console.log("THREEDOBJECT ARRAY" + threeDObjectArray[i]);
+                    console.log("THREEDOBJECT ARRAY LENGTH" + threeDObjectArray.length);
 
                     scene.add(mesh);
                 }
@@ -323,6 +345,14 @@
                     //what objects are on screen?
                     //isObjectOnScreen(threeDObjectArray[0]);
 
+                    console.log("-----ARRAY: " + threeDObjectArray)
+                    console.log("-----ARRAY LENGTH" + threeDObjectArray.length)
+                    if (threeDObjectArray.length == 2) {
+                        console.log("---------SUCCESS--------")
+                    } else {
+                        console.log("---------FAILURE--------")
+
+                    }
 
                     console.log("Object 1 Angle = " + threeDObjectArray[0].theAngle)
                     // console.log("Object 2 Angle = " + threeDObjectArray[1].theAngle * (180 / Math.PI))
@@ -475,8 +505,8 @@
             //checks if the angle of the object is within the angles the field of view of the camera
             function isObjectOnScreen(object) {
                 fov = camera.fov
-                lowfov = -(fov / 2)
-                highfov = (fov / 2)
+                lowfov = -(fov / 2) - 10
+                highfov = (fov / 2) + 10
 
                 cameraRotation = getCameraRotation()
                 lowCamera = cameraRotation + lowfov
@@ -584,7 +614,11 @@
                         } else if (objectsOnScreen[b].theAngle <= upperMiddleFov && objectsOnScreen[b].theAngle > lowerMiddleFov) {
                             console.log("Centre")
 
-                            adScript[b] += "In the centre, ";
+                            if (objectsOnScreen[b].theDistance <= 200 && objectsOnScreen[b].colour == "Gold") {
+
+                            } else {
+                                adScript[b] += "In the centre, ";
+                            }
 
                         } else if (objectsOnScreen[b].theAngle <= lowerMiddleFov && objectsOnScreen[b].theAngle > leftFov) {
                             console.log("Right")
@@ -617,13 +651,20 @@
                         } else {
 
                             if (objectsOnScreen[b].theDistance <= 200) {
-                                a = randomInt(3);
-                                if (a == 1) {
-                                    adScript[b] += "Very close up there is a ";
-                                } else if (a == 2) {
-                                    adScript[b] += "Within reach there is a ";
-                                } else if (a == 3) {
-                                    adScript[b] += "Directly in front of you there is a ";
+
+                                if (objectsOnScreen[b].colour == "Gold") {
+                                    adScript[b] += "Congratulations you found the ";
+                                } else {
+
+
+                                    a = randomInt(3);
+                                    if (a == 1) {
+                                        adScript[b] += "Very close up there is a ";
+                                    } else if (a == 2) {
+                                        adScript[b] += "Within reach there is a ";
+                                    } else if (a == 3) {
+                                        adScript[b] += "Directly in front of you there is a ";
+                                    }
                                 }
 
                             } else if (objectsOnScreen[b].theDistance <= 600) {
@@ -641,7 +682,7 @@
                                 if (e == 1) {
                                     adScript[b] += "In the distance, You can faintly see a ";
                                 } else if (e == 2) {
-                                    adScript[b] += "Beyond the horizon there is a ";
+                                    adScript[b] += "Far away, there is a ";
 
                                 }
                             }
@@ -659,6 +700,9 @@
                                     break;
                                 case "Purple Pizzazz":
                                     adScript[b] += "purple"
+                                    break;
+                                case "Gold":
+                                    adScript[b] += "golden"
                                     break;
                                 case null:
                                     adScript[b] += ""
@@ -757,6 +801,33 @@
                 window.speechSynthesis.speak(utterance);
             }
 
+            //Adds the 2 objects the testers will be looking for
+            function addTestObjects() {
+                // geometry = new THREE.SphereGeometry(60)
+                // material = new THREE.MeshBasicMaterial({ color: 0xFFD700 });
+
+                // mesh = new THREE.Mesh(geometry, material)
+
+                // mesh.position.x = 190;
+                // mesh.position.y = 50;
+                // mesh.position.z = -278;
+
+                // scene.add(mesh);
+
+                // objectColour = "Gold"
+                // objectShape = "Sphere"
+                // objectTexture = null
+
+                // let newObject = new ThreeDObject(objectColour, objectShape, mesh.position.x, mesh.position.y, mesh.position.z, objectTexture, mesh.position);
+                // r = threeDObjectArray.length
+                // threeDObjectArray[r] = newObject;
+
+                // console.log("WORKING")
+
+                // console.log(threeDObjectArray[r]);
+                // console.log(threeDObjectArray.length);
+
+            }
         </script>
     </div>
 </body>
