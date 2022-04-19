@@ -26,7 +26,6 @@
     <!--First import the code for three.js and FirstPersonController from file-->
     <script src="js/three.js"></script>
     <script src="js/FirstPersonControls.js"></script>
-    <script src="js/webxr-polyfill.js"></script>
 
     <!-- <script type="module" src="js/VRButton.js"></script> -->
 
@@ -35,9 +34,6 @@
 
     <div class="mainContent">
         <script>
-
-            var polyfill = new WebXRPolyfill();
-
 
             //Creates some Three.js necessities
             var renderer;
@@ -460,8 +456,6 @@
                     threeDObjectArray[a].theAngle = angles[a];
 
                     console.log("The Objects Angle: " + threeDObjectArray[a].theAngle)
-
-
                 }
                 return angles;
             }
@@ -487,15 +481,10 @@
             }
 
             //Function works out how many degrees the camera has rotated
-            //Seems to be working fine? Not sure why max is around 280 and min is around -80
             function getCameraRotation() {
-                //Camera starts out at 90
-                //So I offset by 90 to make the angle 0
-                //initialCameraAngle = 90;
                 cameraAngle = getVectorAngle()
                 currentRotation = cameraAngle  //- initialCameraAngle
                 console.log("Current Camera Rotation: " + currentRotation)
-
                 return currentRotation
             }
 
